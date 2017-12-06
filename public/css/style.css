@@ -1,0 +1,9 @@
+.ui.cards > .card, .ui.card {
+	width: 100%;
+}
+
+.ui.right.floated.basic.icon.button {
+	position: absolute;
+	right: 7px;
+	top: 6px;
+}

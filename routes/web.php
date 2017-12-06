@@ -12,12 +12,19 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	return redirect()->route('todo.browse');
 });
 
+// Auth routes
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Todo routes
+Route::get('/todos', 'TodoController@index')->name('todo.browse');
+Route::get('/todo/create', 'TodoController@create')->name('todo.create');
+Route::get('/todo/edit/{todoId}', 'TodoController@edit')->name('todo.edit');
+Route::post('/todo/create', 'TodoController@store')->name('todo.store');
 
-// List route
-Route::get('/lists', 'ListController@index')->name('lists');
+// Task routes
+Route::get('/todo/{todoId}/tasks', 'TaskController@index')->name('task.browse');
+Route::get('/task/create/{todoId}', 'TaskController@create')->name('task.create');
+Route::post('/task/create/{todoId}', 'TaskController@store')->name('task.store');
