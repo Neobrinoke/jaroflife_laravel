@@ -120,4 +120,13 @@ return [
         ],
     ],
 
+    // TEMPORARY FIX LOCALHOST SSL
+    'stream' => [
+        'ssl' => [
+            'allow_self_signed' => true,
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+        ],
+    ],
+
 ];
