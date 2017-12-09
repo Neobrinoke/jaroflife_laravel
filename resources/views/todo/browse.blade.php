@@ -14,7 +14,7 @@
 		<div class="ui three column stackable grid">
 			@foreach( $todos as $todo )
 				<?php
-				$members = count( $todo->todo->todos_users );
+				$members = count( $todo->todo->members );
 				$tasks = count( $todo->todo->tasks );
 
 				$members .= $members > 1 ? ' Membres' : ' Membre';

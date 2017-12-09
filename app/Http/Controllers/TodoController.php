@@ -77,7 +77,8 @@ class TodoController extends Controller
 	 */
 	public function edit($todoId)
 	{
-		return "edit - $todoId";
+		$todo = Todo::find($todoId);
+		return view('todo.edit', compact('todo'));
 	}
 
 	/**

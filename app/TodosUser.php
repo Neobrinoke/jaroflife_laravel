@@ -17,4 +17,8 @@ class TodosUser extends Model
 	public function todo() {
 		return $this->hasOne('App\Todo', 'id', 'todo_id');
 	}
+
+	public function user() {
+		return $this->hasOne('App\User', 'id', 'user_id');
+	}
 }

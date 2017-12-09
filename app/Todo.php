@@ -10,7 +10,7 @@ class Todo extends Model
 		'name', 'description', 'author_id'
 	];
 
-	public function todos_users() {
+	public function members() {
 		return $this->hasMany('App\TodosUser', 'todo_id', 'id');
 	}
 
