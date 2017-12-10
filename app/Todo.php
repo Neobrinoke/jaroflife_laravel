@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Todo extends Model
 {
@@ -13,7 +14,7 @@ class Todo extends Model
 	];
 
 	public function members() {
-		return $this->hasMany('App\TodosUser', 'todo_id', 'id');
+		return $this->hasMany('App\TodosUser', 'todo_id', 'id')->where('user_id', '!=', Auth::id());
 	}
 
 	public function tasks() {

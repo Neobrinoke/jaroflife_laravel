@@ -20,16 +20,16 @@
 			<label>Description</label>
 			<textarea name="description" id="description" cols="30" rows="2">{{ $todo->description }}</textarea>
 		</div>
-		<input class="ui fluid submit button teal" type="submit" value="Modifier" name="editTodo">
+		<button type="submit" class="ui button teal">Modifier les détails de la liste</button>
 	</form>
 	<h4 class="ui dividing header">Participants</h4>
-	@if( sizeof( $todo->members ) > 1 )
+	@if( $todo->members->isNotEmpty() )
 		<table class="ui celled selectable table">
 			<thead>
 				<tr>
 					<th>Nom</th>
-					<th>Date de rejoins</th>
-					<th>Authority level</th>
+					<th>Rejoins le</th>
+					<th>Rang</th>
 					<th></th>
 					<th></th>
 				</tr>
@@ -41,9 +41,9 @@
 						<tr>
 							<td>{{ $member->user->name }}</td>
 							<td>{{ $member->joined_at }}</td>
-							<td>
+							<td class="collapsing">
 								<div class="field">
-									<select name="authority_id">
+									<select class="ui dropdown" name="authority_id">
 										<option value="1" {{ $member->authority_id == 1 ? 'selected' : '' }}>Administrateur</option>
 										<option value="2" {{ $member->authority_id == 2 ? 'selected' : '' }}>Modérateur</option>
 										<option value="3" {{ $member->authority_id == 3 ? 'selected' : '' }}>Utlisateur</option>
@@ -63,6 +63,7 @@
 			<p>Vous êtes seul dans cette liste</p>
 		</div>
 	@endif
-	{{ $todo }}
+	<h4 class="ui dividing header">Zone de danger</h4>
+	<a class="ui button red" onclick="onConfirmNotif('Voulez-vous vraiment supprimer cette liste ?\nToutes les tâches correspondante serons aussi supprimer\nL\'action est irresversible', '/list/delete/<?= $todo->id ?>/')">Supprimer cette liste !</a>
 </div>
 @endsection

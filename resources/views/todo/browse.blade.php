@@ -10,7 +10,7 @@
 	</h1>
 </div>
 <div class="ui attached fluid segment">
-	@if( !$todos->isEmpty() )
+	@if( $todos->isNotEmpty() )
 		<div class="ui three column stackable grid">
 			@foreach( $todos as $todo )
 				<?php
