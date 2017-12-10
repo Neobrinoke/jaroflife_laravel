@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Todo;
+use App\Task;
 use App\TodosUser;
 
 class TodoController extends Controller
@@ -61,10 +62,10 @@ class TodoController extends Controller
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  int  $todoId
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($id)
+	public function show($todoId)
 	{
 		//
 	}
@@ -72,7 +73,7 @@ class TodoController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  int  $todoId
 	 * @return \Illuminate\Http\Response
 	 */
 	public function edit($todoId)
@@ -85,22 +86,42 @@ class TodoController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
+	 * @param  int  $todoId
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, $todoId)
 	{
-		//
+		if($request->has('edit_todo'))
+		{
+			$todo = Todo::find($todoId);
+			$todo->name = $request->input('name');
+			$todo->description = $request->input('description');
+			$todo->save();
+		}
+		else if($request->has('edit_member'))
+		{
+			$todo_user = TodosUser::where('user_id', $request->input('user_id'))->first();
+			$todo_user->authority_id = $request->input('authority_id');
+			$todo_user->save();
+		}
+		else if($request->has('expulse_member'))
+		{
+			$todo_user = TodosUser::where('user_id', $request->input('user_id'))->first()->delete();
+		}
+		return redirect()->route('todo.edit', ['todoId' => $todoId]);
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  int  $id
+	 * @param  int  $todoId
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($id)
+	public function destroy($todoId)
 	{
-		//
+		TodosUser::where('todo_id', $todoId)->delete();
+		Task::where('todo_id', $todoId)->delete();
+		Todo::find($todoId)->delete();
+		return redirect()->route('todo.browse');
 	}
 }

@@ -12,15 +12,16 @@
 <div class="ui attached fluid segment">
 	<h4 class="ui dividing header">Détails</h4>
 	<form class="ui form" method="POST">
+		{{ csrf_field() }}
 		<div class="field">
-			<label>Nom</label>
+			<label for="name">Nom</label>
 			<input type="text" name="name" id="name" value="{{ $todo->name }}">
 		</div>
 		<div class="field">
-			<label>Description</label>
+			<label for="description">Description</label>
 			<textarea name="description" id="description" cols="30" rows="2">{{ $todo->description }}</textarea>
 		</div>
-		<button type="submit" class="ui button teal">Modifier les détails de la liste</button>
+		<input class="ui button teal" type="submit" name="edit_todo" value="Modifier les détails de la liste">
 	</form>
 	<h4 class="ui dividing header">Participants</h4>
 	@if( $todo->members->isNotEmpty() )
@@ -37,21 +38,23 @@
 			<tbody>
 				@foreach( $todo->members as $member )
 					<form class="ui form" method="POST">
+						{{ csrf_field() }}
 						<input type="hidden" name="user_id" value="{{ $member->user->id }}">
 						<tr>
 							<td>{{ $member->user->name }}</td>
 							<td>{{ $member->joined_at }}</td>
 							<td class="collapsing">
 								<div class="field">
-									<select class="ui dropdown" name="authority_id">
+									<!-- <select class="ui dropdown" name="authority_id"> -->
+									<select name="authority_id">
 										<option value="1" {{ $member->authority_id == 1 ? 'selected' : '' }}>Administrateur</option>
 										<option value="2" {{ $member->authority_id == 2 ? 'selected' : '' }}>Modérateur</option>
 										<option value="3" {{ $member->authority_id == 3 ? 'selected' : '' }}>Utlisateur</option>
 									</select>
 								</div>
 							</td>
-							<td class="collapsing"><input class="ui button teal" type="submit" name="edit" value="Editer" /></td>
-							<td class="collapsing"><input class="ui button red" type="submit" name="expulse" value="Expulser" /></td>
+							<td class="collapsing"><input class="ui button teal" type="submit" name="edit_member" value="Editer" /></td>
+							<td class="collapsing"><input class="ui button red" type="submit" name="expulse_member" value="Expulser" /></td>
 						</tr>
 					</form>
 				@endforeach
@@ -64,6 +67,11 @@
 		</div>
 	@endif
 	<h4 class="ui dividing header">Zone de danger</h4>
-	<a class="ui button red" onclick="onConfirmNotif('Voulez-vous vraiment supprimer cette liste ?\nToutes les tâches correspondante serons aussi supprimer\nL\'action est irresversible', '/list/delete/<?= $todo->id ?>/')">Supprimer cette liste !</a>
+	<!-- <a class="ui button red" onclick="onConfirmNotif('Voulez-vous vraiment supprimer cette liste ?\nToutes les tâches correspondante serons aussi supprimer\nL\'action est irresversible', '/list/delete/<?= $todo->id ?>/')">Supprimer cette liste !</a> -->
+	<form class="ui form" method="POST">
+		{{ csrf_field() }}
+		<input name="_method" type="hidden" value="DELETE" />
+		<input type="submit" class="ui button red" value="Supprimer cette liste !">
+	</form>
 </div>
 @endsection
