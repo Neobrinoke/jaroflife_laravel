@@ -5,7 +5,7 @@
 @section('container')
 <div class="ui attached message">
 	<h1 class="header">
-		<span>Vos listes</span>
+		<span>Mes listes</span>
 		<span><a class="ui right floated basic icon button" href="{{ route('todo.create') }}" data-tooltip="Ajouter une liste"><i class="add icon"></i></a></span>
 	</h1>
 </div>
@@ -37,7 +37,7 @@
 							<div class="extra content">
 								<div class="ui two buttons">
 									<a href="{{ route('todo.edit', ['todoId' => $todo->todo->id]) }}" class="ui basic button purple"><i class="options icon"></i>Détails</a>
-									<a href="{{ route('task.browse', ['todoId' => $todo->todo->id]) }}" class="ui basic button blue">Afficher<i class="arrow right icon"></i></a>
+									<a href="{{ route('todo.show', ['todoId' => $todo->todo->id]) }}" class="ui basic button blue">Afficher<i class="arrow right icon"></i></a>
 								</div>
 							</div>
 						</div>
@@ -46,7 +46,7 @@
 			@endforeach
 		</div>
 	@else
-		vide
+		{!! sendMessage('warning', 'Aucune liste disponible') !!}
 	@endif
 </div>
 @endsection

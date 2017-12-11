@@ -11,8 +11,7 @@ use App\TodosUser;
 
 class TodoController extends Controller
 {
-	public function __construct()
-	{
+	public function __construct() {
 		$this->middleware('auth');
 	}
 	
@@ -23,8 +22,8 @@ class TodoController extends Controller
 	 */
 	public function index()
 	{
-		$todos = TodosUser::where('user_id', Auth::user()->id)->get();
-		return view('todo.browse', compact('todos'));
+		$todos = TodosUser::where( 'user_id', Auth::user()->id )->get();
+		return view( 'todo.browse', compact( 'todos' ) );
 	}
 
 	/**
@@ -32,9 +31,8 @@ class TodoController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create()
-	{
-		return view('todo.create');
+	public function create() {
+		return view( 'todo.create' );
 	}
 
 	/**
@@ -43,20 +41,20 @@ class TodoController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request)
+	public function store( Request $request )
 	{
 		$todo = Todo::create([
-			'name' => $request->input('name'),
-			'description' => $request->input('description'),
+			'name' => $request->input( 'name' ),
+			'description' => $request->input( 'description' ),
 			'author_id' => Auth::user()->id
 		]);
 		
 		TodosUser::create([
 			'user_id' => Auth::user()->id,
 			'todo_id' => $todo->id,
-			'authority_id' => 3
+			'authority_id' => 1
 		]);
-		return redirect()->route('todo.browse');
+		return redirect()->route( 'todo.browse' );
 	}
 
 	/**
@@ -65,9 +63,15 @@ class TodoController extends Controller
 	 * @param  int  $todoId
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($todoId)
+	public function show( $todoId )
 	{
-		//
+		$todo = Todo::find( $todoId );
+		if( Auth::user()->can('show', $todo ) )
+		{
+			$title = "Mes tâches pour la liste [$todo->name]";
+			return view( 'task.browse', compact( 'todo', 'title' ) );
+		}
+		else return view( 'no_perm' );
 	}
 
 	/**
@@ -76,10 +80,15 @@ class TodoController extends Controller
 	 * @param  int  $todoId
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit($todoId)
+	public function edit( $todoId )
 	{
-		$todo = Todo::find($todoId);
-		return view('todo.edit', compact('todo'));
+		$todo = Todo::findOrFail( $todoId );
+		if( Auth::user()->can( 'edit', $todo ) )
+		{
+			$title = "Détails de la liste [$todo->name]";
+			return view( 'todo.edit', compact( 'todo', 'title' ) );
+		}
+		else return view('no_perm');
 	}
 
 	/**
@@ -89,26 +98,34 @@ class TodoController extends Controller
 	 * @param  int  $todoId
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, $todoId)
+	public function update( Request $request, $todoId )
 	{
-		if($request->has('edit_todo'))
+		$todo = Todo::findOrFail( $todoId );
+		if( Auth::user()->can('edit', $todo ) )
 		{
-			$todo = Todo::find($todoId);
-			$todo->name = $request->input('name');
-			$todo->description = $request->input('description');
-			$todo->save();
+			if( $request->has( 'edit_todo' ) )
+			{
+				$todo->name = $request->input( 'name' );
+				$todo->description = $request->input( 'description' );
+				$todo->save();
+			}
+			else if( $request->has( 'edit_member' ) || $request->has( 'expulse_member' ) )
+			{
+				$todo_user = TodosUser::where([
+					'user_id' => $request->input( 'user_id' ),
+					'todo_id' => $todo->id
+				])->firstOrFail();
+
+				if( $request->has( 'edit_member' ) )
+				{
+					$todo_user->authority_id = $request->input( 'authority_id' );
+					$todo_user->save();
+				}
+				else $todo_user->delete();
+			}
+			return redirect()->route( 'todo.edit', compact( 'todoId' ) );
 		}
-		else if($request->has('edit_member'))
-		{
-			$todo_user = TodosUser::where('user_id', $request->input('user_id'))->first();
-			$todo_user->authority_id = $request->input('authority_id');
-			$todo_user->save();
-		}
-		else if($request->has('expulse_member'))
-		{
-			$todo_user = TodosUser::where('user_id', $request->input('user_id'))->first()->delete();
-		}
-		return redirect()->route('todo.edit', ['todoId' => $todoId]);
+		else return view('no_perm');
 	}
 
 	/**
@@ -117,11 +134,16 @@ class TodoController extends Controller
 	 * @param  int  $todoId
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($todoId)
+	public function destroy( $todoId )
 	{
-		TodosUser::where('todo_id', $todoId)->delete();
-		Task::where('todo_id', $todoId)->delete();
-		Todo::find($todoId)->delete();
-		return redirect()->route('todo.browse');
+		$todo = Todo::findOrFail( $todoId );
+		if( Auth::user()->can( 'edit', $todo ) )
+		{
+			TodosUser::where( 'todo_id', $todo->id )->delete();
+			Task::where( 'todo_id', $todo->id )->delete();
+			$todo->delete();
+			return redirect()->route( 'todo.browse' );
+		}
+		else return view( 'no_perm' );
 	}
 }

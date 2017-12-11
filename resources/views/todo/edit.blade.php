@@ -1,12 +1,12 @@
 @extends('index')
 
-@section('title', 'Mes listes')
+@section('title', $title)
 
 @section('container')
 <div class="ui attached message">
 	<h1 class="header">
-		<span>Vos listes</span>
-		<span><a class="ui right floated basic icon button" href="{{ route('todo.create') }}" data-tooltip="Ajouter une liste"><i class="add icon"></i></a></span>
+		<span>{{ $title }}</span>
+		<span><a class="ui right floated basic icon button" href="#" data-tooltip="Ajouter un utilisateur"><i class="user add icon"></i></a></span>
 	</h1>
 </div>
 <div class="ui attached fluid segment">
@@ -65,12 +65,11 @@
 					</tbody>
 				</table>
 			@else
-				{!! sendMessage('info', 'Vous êtes seul dans cette liste', ['header_message' => 'Important']) !!}
+				{!! sendMessage('warning', 'Vous êtes seul dans cette liste') !!}
 			@endif
 		</div>
 	</div>
 	<h4 class="ui dividing header">Zone de danger</h4>
-	<!-- <a class="ui button red" onclick="onConfirmNotif('Voulez-vous vraiment supprimer cette liste ?\nToutes les tâches correspondante serons aussi supprimer\nL\'action est irresversible', '/list/delete/<?= $todo->id ?>/')">Supprimer cette liste !</a> -->
 	<form class="ui form" method="POST">
 		{{ csrf_field() }}
 		<input name="_method" type="hidden" value="DELETE" />

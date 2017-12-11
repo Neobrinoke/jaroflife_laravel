@@ -22,11 +22,11 @@ Auth::routes();
 Route::get('/todos', 'TodoController@index')->name('todo.browse');
 Route::get('/todo/create', 'TodoController@create')->name('todo.create');
 Route::get('/todo/edit/{todoId}', 'TodoController@edit')->name('todo.edit');
+Route::get('/todo/{todoId}/tasks', 'TodoController@show')->name('todo.show');
 Route::post('/todo/create', 'TodoController@store')->name('todo.store');
 Route::post('/todo/edit/{todoId}', 'TodoController@update')->name('todo.update');
 Route::delete('/todo/edit/{todoId}', 'TodoController@destroy')->name('todo.destroy');
 
 // Task routes
-Route::get('/todo/{todoId}/tasks', 'TaskController@index')->name('task.browse');
 Route::get('/task/create/{todoId}', 'TaskController@create')->name('task.create');
 Route::post('/task/create/{todoId}', 'TaskController@store')->name('task.store');

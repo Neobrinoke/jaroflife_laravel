@@ -1,11 +1,11 @@
 @extends('index')
 
-@section('title', 'Mes tâche pour la liste ??')
+@section('title', $title)
 
 @section('container')
 <div class="ui attached message">
 	<h1 class="header">
-		<span>Vos tâche pour la liste {{ $todo->name }}</span>
+		<span>{{ $title }}</span>
 		<span><a class="ui right floated basic icon button" href="{{ route('task.create', ['todoId' => $todo->id]) }}" data-tooltip="Ajouter une tâche"><i class="add icon"></i></a></span>
 	</h1>
 </div>
@@ -36,7 +36,7 @@
 			</tbody>
 		</table>
 	@else
-		vide
+		{!! sendMessage('warning', 'Aucune tâche disponible') !!}
 	@endif
 </div>
 @endsection
