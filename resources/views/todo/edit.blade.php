@@ -65,10 +65,7 @@
 					</tbody>
 				</table>
 			@else
-				<div class="ui ignored warning message">
-					<div class="header">Information</div>
-					<p>Vous êtes seul dans cette liste</p>
-				</div>
+				{!! sendMessage('info', 'Vous êtes seul dans cette liste', ['header_message' => 'Important']) !!}
 			@endif
 		</div>
 	</div>

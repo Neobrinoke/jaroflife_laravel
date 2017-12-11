@@ -7,3 +7,11 @@
 	right: 7px;
 	top: 6px;
 }
+
+.ui.message p {
+	margin-top: 0px;
+}
+
+.ui.message .header {
+	margin-bottom: 10px;
+}
