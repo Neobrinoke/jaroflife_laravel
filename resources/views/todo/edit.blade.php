@@ -27,9 +27,9 @@
 			</form>
 		</div>
 		<div class="ten wide column">
-			<h4 class="ui dividing header">Participants</h4>
+			<h4 class="ui dividing header">Collaborateurs</h4>
 			@if( $todo->members->isNotEmpty() )
-				<table class="ui celled selectable table">
+				<table class="ui celled structured selectable table">
 					<thead>
 						<tr>
 							<th>Nom</th>
