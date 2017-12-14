@@ -18,14 +18,14 @@ class TodoPolicy
 	 * @param  \App\Todo  $todo
 	 * @return mixed
 	 */
-	public function show( User $user, Todo $todo )
+	public function show(User $user, Todo $todo)
 	{
 		$todo_user = TodosUser::where([
 			'user_id' => $user->id,
 			'todo_id' => $todo->id
 		])->firstOrFail();
 
-		if( $todo_user ) {
+		if($todo_user) {
 			return true;
 		} else {
 			return false;
@@ -38,8 +38,7 @@ class TodoPolicy
 	 * @param  \App\User  $user
 	 * @return mixed
 	 */
-	public function create( User $user )
-	{
+	public function create(User $user) {
 		return true;
 	}
 
@@ -50,14 +49,14 @@ class TodoPolicy
 	 * @param  \App\Todo  $todo
 	 * @return mixed
 	 */
-	public function edit( User $user, Todo $todo )
+	public function edit(User $user, Todo $todo)
 	{
 		$todo_user = TodosUser::where([
 			'user_id' => $user->id,
 			'todo_id' => $todo->id
 		])->firstOrFail();
 
-		if( $todo_user && ( $todo_user->authority_id == 1 ) ) {
+		if($todo_user && ($todo_user->authority_id == 1)) {
 			return true;
 		} else {
 			return false;

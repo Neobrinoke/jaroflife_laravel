@@ -25,12 +25,19 @@
 			<tbody>
 				@foreach( $todo->tasks as $task )
 					<tr>
-						<td onclick="location.href='/task/read/{{ $todo->id }}/{{ $task->id }}/'" style="cursor: pointer;">{{ $task->name }}</td>
-						<td onclick="location.href='/task/read/{{ $todo->id }}/{{ $task->id }}/'" style="cursor: pointer;">{{ $task->description }}</td>
-						<td onclick="location.href='/task/read/{{ $todo->id }}/{{ $task->id }}/'" style="cursor: pointer;">{{ $task->priority }}</td>
-						<td onclick="location.href='/task/read/{{ $todo->id }}/{{ $task->id }}/'" style="cursor: pointer;">{{ $task->user->name }}</td>
-						<td onclick="location.href='/task/read/{{ $todo->id }}/{{ $task->id }}/'" style="cursor: pointer;">{{ $task->created_at }}</td>
-						<td class="collapsing"><a class="ui icon button red" onclick="onConfirmNotif('Voulez-vous vraiment supprimer cette tâche ?', '/task/delete/{{ $todo->id }}/{{ $task->id }}/')" data-tooltip="Supprimer la tâche"><i class="trash icon"></i></a></td>
+						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->name }}</td>
+						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->description }}</td>
+						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->priority }}</td>
+						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->user->name }}</td>
+						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->created_at }}</td>
+						<td class="collapsing">
+							<form method="POST">
+								{{ csrf_field() }}
+								<input type="hidden" name="_method" value="DELETE"/>
+								<input type="hidden" name="task_id" value="{{ $task->id }}"/>
+								<button type="submit" class="ui icon button red" data-tooltip="Supprimer la tâche"><i class="trash icon"></i></button>
+							</form>
+						</td>
 					</tr>
 				@endforeach
 			</tbody>

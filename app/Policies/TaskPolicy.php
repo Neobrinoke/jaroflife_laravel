@@ -17,9 +17,8 @@ class TaskPolicy
      * @param  \App\Task  $task
      * @return mixed
      */
-    public function view(User $user, Task $task)
-    {
-        //
+    public function show(User $user, Task $task) {
+        return true;
     }
 
     /**
@@ -28,9 +27,8 @@ class TaskPolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function create(User $user)
-    {
-        //
+    public function create(User $user) {
+        return true;
     }
 
     /**
@@ -40,20 +38,7 @@ class TaskPolicy
      * @param  \App\Task  $task
      * @return mixed
      */
-    public function update(User $user, Task $task)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can delete the task.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Task  $task
-     * @return mixed
-     */
-    public function delete(User $user, Task $task)
-    {
-        //
+    public function edit(User $user, Task $task) {
+        return true;
     }
 }
