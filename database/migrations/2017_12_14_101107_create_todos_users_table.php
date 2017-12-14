@@ -15,10 +15,13 @@ class CreateTodosUsersTable extends Migration
     {
         Schema::create('todos_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('todo_id');
-            $table->integer('authority_id');
+            $table->integer('user_id')->unsigned()->index();
+            $table->integer('todo_id')->unsigned()->index();
+            $table->integer('authority_id')->unsigned();
             $table->timestamp('joined_at');
+            
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('todo_id')->references('id')->on('todos');
         });
     }
 

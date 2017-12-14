@@ -17,11 +17,14 @@ class CreateTasksTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->longtext('description');
-            $table->integer('priority');
-            $table->integer('author_id');
-            $table->integer('todo_id');
+            $table->integer('priority')->unsigned();
+            $table->integer('author_id')->unsigned()->index();
+            $table->integer('todo_id')->unsigned()->index();
             $table->timestamps();
             $table->softDeletes();
+            
+            $table->foreign('author_id')->references('id')->on('users');
+            $table->foreign('todo_id')->references('id')->on('todos');
         });
     }
 

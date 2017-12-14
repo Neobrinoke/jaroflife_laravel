@@ -17,9 +17,11 @@ class CreateTodosTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->longtext('description');
-            $table->integer('author_id');
+            $table->integer('author_id')->unsigned()->index();
             $table->timestamps();
             $table->softDeletes();
+            
+            $table->foreign('author_id')->references('id')->on('users');
         });
     }
 
