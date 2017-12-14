@@ -40,7 +40,7 @@ class TaskController extends Controller
 			'author_id' => Auth::user()->id,
 			'todo_id' => $todoId
 		]);
-		return redirect()->route('task.browse', ['id' => $todoId]);
+		return redirect()->route('todo.show', ['todoId' => $todoId]);
 	}
 
 	/**
