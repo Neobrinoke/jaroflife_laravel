@@ -63,12 +63,10 @@ class TodoController extends Controller
 	 */
 	public function show(Todo $todo)
 	{
-		if(Auth::user()->can('show', $todo))
-		{
-			$title = "Mes tâches pour la liste [$todo->name]";
-			return view('task.index', compact('todo', 'title'));
-		}
-		else return view('no_perm');
+		$this->authorize('show', $todo);
+
+		$title = "Mes tâches pour la liste [$todo->name]";
+		return view('task.index', compact('todo', 'title'));
 	}
 
 	/**
@@ -79,12 +77,10 @@ class TodoController extends Controller
 	 */
 	public function edit(Todo $todo)
 	{
-		if(Auth::user()->can('edit', $todo))
-		{
-			$title = "Détails de la liste [$todo->name]";
-			return view('todo.edit', compact('todo', 'title'));
-		}
-		else return view('no_perm');
+		$this->authorize('edit', $todo);
+
+		$title = "Détails de la liste [$todo->name]";
+		return view('todo.edit', compact('todo', 'title'));
 	}
 
 	/**
@@ -96,31 +92,29 @@ class TodoController extends Controller
 	 */
 	public function update(Request $request, Todo $todo)
 	{
-		if(Auth::user()->can('edit', $todo))
-		{
-			if( $request->has('edit_todo'))
-			{
-				$todo->name = $request->input('name');
-				$todo->description = $request->input('description');
-				$todo->save();
-			}
-			else if($request->has('edit_member') || $request->has('expulse_member'))
-			{
-				$todo_user = TodosUser::where([
-					'user_id' => $request->input('user_id'),
-					'todo_id' => $todo->id
-				])->firstOrFail();
+		$this->authorize('edit', $todo);
 
-				if($request->has('edit_member'))
-				{
-					$todo_user->authority_id = $request->input('authority_id');
-					$todo_user->save();
-				}
-				else $todo_user->delete();
-			}
-			return redirect()->route('todo.edit', compact('todo'));
+		if( $request->has('edit_todo'))
+		{
+			$todo->name = $request->input('name');
+			$todo->description = $request->input('description');
+			$todo->save();
 		}
-		else return view('no_perm');
+		else if($request->has('edit_member') || $request->has('expulse_member'))
+		{
+			$todo_user = TodosUser::where([
+				'user_id' => $request->input('user_id'),
+				'todo_id' => $todo->id
+			])->firstOrFail();
+
+			if($request->has('edit_member'))
+			{
+				$todo_user->authority_id = $request->input('authority_id');
+				$todo_user->save();
+			}
+			else $todo_user->delete();
+		}
+		return redirect()->route('todo.edit', compact('todo'));
 	}
 
 	/**
@@ -131,13 +125,11 @@ class TodoController extends Controller
 	 */
 	public function destroy(Todo $todo)
 	{
-		if(Auth::user()->can('edit', $todo))
-		{
-			TodosUser::where('todo_id', $todo->id)->delete();
-			Task::where('todo_id', $todo->id)->delete();
-			$todo->delete();
-			return redirect()->route('todo.index');
-		}
-		else return view('no_perm');
+		$this->authorize('edit', $todo);
+
+		TodosUser::where('todo_id', $todo->id)->delete();
+		Task::where('todo_id', $todo->id)->delete();
+		$todo->delete();
+		return redirect()->route('todo.index');
 	}
 }
