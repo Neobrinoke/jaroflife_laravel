@@ -17,43 +17,45 @@ class TaskController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
+	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create($todoId) {
+	public function create(Todo $todo) {
 		return view('task.create');
 	}
 
 	/**
 	 * Store a newly created resource in storage.
 	 *
+	 * @param  \App\Todo  $todo
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $todoId)
+	public function store(Request $request, Todo $todo)
 	{
 		Task::create([
 			'name' => $request->input('name'),
 			'description' => $request->input('description'),
 			'priority' => $request->input('priority'),
-			'author_id' => Auth::user()->id,
-			'todo_id' => $todoId
+			'author_id' => Auth::id(),
+			'todo_id' => $todo->id
 		]);
-		return redirect()->route('todo.show', compact('todoId'));
+		return redirect()->route('todo.show', compact('todo'));
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int  $id
+	 * @param  \App\Todo  $todo
+	 * @param  \App\Task  $task
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($todoId, $taskId)
+	public function show(Todo $todo, Task $task)
 	{
-		$task = Task::findByTodo($todoId, $taskId);
 		if(Auth::user()->can('show', $task))
 		{
 			$title = "Tâche - $task->name";
-			return view('task.show', compact('todoId', 'task', 'title'));
+			return view('task.show', compact('todo', 'task', 'title'));
 		}
 		else return view('no_perm');
 	}
@@ -61,13 +63,12 @@ class TaskController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param  int  $todoId
-	 * @param  int  $taskId
+	 * @param  \App\Todo  $todo
+	 * @param  \App\Task  $task
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit($todoId, $taskId)
+	public function edit(Todo $todo, Task $task)
 	{
-		$task = Task::findByTodo($todoId, $taskId);
 		if(Auth::user()->can('edit', $task))
 		{
 			$title = "Modifier la tâche - $task->name";
@@ -80,19 +81,18 @@ class TaskController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $todoId
-	 * @param  int  $taskId
+	 * @param  \App\Todo  $todo
+	 * @param  \App\Task  $task
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, $todoId, $taskId)
+	public function update(Request $request, Todo $todo, Task $task)
 	{
-		$task = Task::findByTodo($todoId, $taskId);
 		if(Auth::user()->can('edit', $task))
 		{
 			$task->name = $request->input('name');
 			$task->description = $request->input('description');
 			$task->save();
-			return redirect()->route('task.edit', compact('todoId', 'taskId'));
+			return redirect()->route('task.show', compact('todo', 'task'));
 		}
 		else return view('no_perm');
 	}
@@ -101,16 +101,17 @@ class TaskController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $todoId
+	 * @param  \App\Todo  $todo
+	 * @param  \App\Task  $task
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(Request $request, $todoId)
+	public function destroy(Request $request, Todo $todo)
 	{
-		$task = Task::findByTodo($todoId, $request->input('task_id'));
+		$task = Task::findByTodo($todo->id, $request->input('task_id'));
 		if(Auth::user()->can('edit', $task))
 		{
 			$task->delete();
-			return redirect()->route('todo.show', compact('todoId'));
+			return redirect()->route('todo.show', compact('todo'));
 		}
 		else return view('no_perm');
 	}

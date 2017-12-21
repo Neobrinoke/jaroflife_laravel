@@ -3,20 +3,9 @@
 @section('title', 'Connexion')
 
 @section('container')
-<form class="ui form stacked segment {{ $errors->has('email') || $errors->has('password') ? 'error' : '' }}" method="POST" action="{{ route('login') }}">
+<form class="ui form stacked segment {{ $errors->any() ? 'error' : '' }}" method="POST" action="{{ route('login') }}">
 	{{ csrf_field() }}
-	<div class="ui error message">
-		<i class="close icon"></i>
-		<div class="header">Erreur</div>
-		<ul class="list">
-			@if( $errors->has('email') )
-				<li>{{ $errors->first('email') }}</li>
-			@endif
-			@if( $errors->has('password') )
-				<li>{{ $errors->first('password') }}</li>
-			@endif
-		</ul>
-	</div>
+	{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
 	<div class="field {{ $errors->has('email') ? 'error' : '' }}">
 		<div class="ui left icon input">
 			<i class="mail icon"></i>

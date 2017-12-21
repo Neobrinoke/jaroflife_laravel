@@ -6,7 +6,7 @@
 <div class="ui attached message">
     <h1 class="header">
 		<span>{{ $title }}</span>
-		<span><a class="ui right floated basic icon button" href="{{ route('task.edit', ['todoId' => $todoId, 'taskId' => $task->id]) }}" data-tooltip="Modifier une tâche"><i class="edit icon"></i></a></span>
+		<span><a class="ui right floated basic icon button" href="{{ route('task.edit', ['todo' => $todo, 'task' => $task]) }}" data-tooltip="Modifier une tâche"><i class="edit icon"></i></a></span>
 	</h1>
 </div>
 <div class="ui attached fluid segment">

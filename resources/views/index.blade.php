@@ -11,7 +11,7 @@
 	<body>
 		<header class="ui attached stackable menu inverted" style="margin-bottom: 25px;">
 			<div class="ui container">
-				<a href="{{ route('todo.browse') }}" class="ui item"><i class="list icon"></i>Afficher mes listes</a>
+				<a href="{{ route('todo.index') }}" class="ui item"><i class="list icon"></i>Afficher mes listes</a>
 				<div class="right menu">
 					<div class="ui dropdown icon item">
 						<span><i class="user circle outline icon"></i>{{ Auth::user()->name }}<i class="dropdown icon"></i></span>

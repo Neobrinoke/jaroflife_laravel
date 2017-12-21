@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use App\Todo;
 use App\Task;
 use App\TodosUser;
 
@@ -20,10 +20,8 @@ class TodoController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index()
-	{
-		$todos = TodosUser::where('user_id', Auth::user()->id)->get();
-		return view('todo.browse', compact('todos'));
+	public function index() {
+		return view('todo.index', ['todos' => Auth::user()->todos]);
 	}
 
 	/**
@@ -54,22 +52,21 @@ class TodoController extends Controller
 			'todo_id' => $todo->id,
 			'authority_id' => 1
 		]);
-		return redirect()->route('todo.browse');
+		return redirect()->route('todo.index');
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int  $todoId
+	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($todoId)
+	public function show(Todo $todo)
 	{
-		$todo = Todo::find($todoId);
 		if(Auth::user()->can('show', $todo))
 		{
 			$title = "Mes tâches pour la liste [$todo->name]";
-			return view('task.browse', compact('todo', 'title'));
+			return view('task.index', compact('todo', 'title'));
 		}
 		else return view('no_perm');
 	}
@@ -77,12 +74,11 @@ class TodoController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param  int  $todoId
+	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit($todoId)
+	public function edit(Todo $todo)
 	{
-		$todo = Todo::findOrFail($todoId);
 		if(Auth::user()->can('edit', $todo))
 		{
 			$title = "Détails de la liste [$todo->name]";
@@ -95,12 +91,11 @@ class TodoController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $todoId
+	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, $todoId)
+	public function update(Request $request, Todo $todo)
 	{
-		$todo = Todo::findOrFail($todoId);
 		if(Auth::user()->can('edit', $todo))
 		{
 			if( $request->has('edit_todo'))
@@ -123,7 +118,7 @@ class TodoController extends Controller
 				}
 				else $todo_user->delete();
 			}
-			return redirect()->route('todo.edit', compact('todoId'));
+			return redirect()->route('todo.edit', compact('todo'));
 		}
 		else return view('no_perm');
 	}
@@ -131,18 +126,17 @@ class TodoController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  int  $todoId
+	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($todoId)
+	public function destroy(Todo $todo)
 	{
-		$todo = Todo::findOrFail($todoId);
 		if(Auth::user()->can('edit', $todo))
 		{
 			TodosUser::where('todo_id', $todo->id)->delete();
 			Task::where('todo_id', $todo->id)->delete();
 			$todo->delete();
-			return redirect()->route('todo.browse');
+			return redirect()->route('todo.index');
 		}
 		else return view('no_perm');
 	}

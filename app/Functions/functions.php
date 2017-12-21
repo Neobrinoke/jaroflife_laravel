@@ -1,5 +1,5 @@
 <?php
-function sendMessage(string $type, string $message, array $options = [])
+function sendMessage(string $type, ?string $message, array $options = [])
 {
 	$result = '
 	<div class="ui '.$type.' message">';

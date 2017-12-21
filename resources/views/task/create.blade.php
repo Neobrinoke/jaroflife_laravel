@@ -29,7 +29,7 @@
 			<label>Text</label>
 			<textarea name="description" id="description"></textarea>
 		</div>
-		<input class="ui fluid submit button teal" type="submit" value="Créer" name="createTask">
+		<input class="ui fluid submit button teal" type="submit" value="Créer" name="create_task">
 	</form>
 </div>
 @endsection

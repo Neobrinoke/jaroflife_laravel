@@ -3,24 +3,10 @@
 @section('title', 'Réinitialiser le mot de passe')
 
 @section('container')
-<form class="ui form stacked segment {{ $errors->has('email') || $errors->has('password') || $errors->has('password_confirmation') ? 'error' : '' }}" method="POST" action="{{ route('password.request') }}">
+<form class="ui form stacked segment {{ $errors->any() ? 'error' : '' }}" method="POST" action="{{ route('password.request') }}">
 	{{ csrf_field() }}
     <input type="hidden" name="token" value="{{ $token }}">
-	<div class="ui error message">
-		<i class="close icon"></i>
-		<div class="header">Erreur</div>
-		<ul class="list">
-            @if( $errors->has('email') )
-                <li>{{ $errors->first('email') }}</li>
-            @endif
-			@if( $errors->has('password') )
-				<li>{{ $errors->first('password') }}</li>
-			@endif
-			@if( $errors->has('password_confirmation') )
-				<li>{{ $errors->first('password_confirmation') }}</li>
-			@endif
-		</ul>
-	</div>
+	{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
 	<div class="field {{ $errors->has('email') ? 'error' : '' }}">
 		<div class="ui left icon input">
 			<i class="mail icon"></i>

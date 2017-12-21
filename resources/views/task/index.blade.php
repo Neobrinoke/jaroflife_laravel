@@ -6,7 +6,7 @@
 <div class="ui attached message">
 	<h1 class="header">
 		<span>{{ $title }}</span>
-		<span><a class="ui right floated basic icon button" href="{{ route('task.create', ['todoId' => $todo->id]) }}" data-tooltip="Ajouter une tâche"><i class="add icon"></i></a></span>
+		<span><a class="ui right floated basic icon button" href="{{ route('task.create', ['todo' => $todo]) }}" data-tooltip="Ajouter une tâche"><i class="add icon"></i></a></span>
 	</h1>
 </div>
 <div class="ui attached fluid segment">
@@ -25,11 +25,11 @@
 			<tbody>
 				@foreach( $todo->tasks as $task )
 					<tr>
-						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->name }}</td>
-						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->description }}</td>
-						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->priority }}</td>
-						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->user->name }}</td>
-						<td onclick="location.href='{{ route('task.show', ['todoId' => $todo->id, 'taskId' => $task->id]) }}'" style="cursor: pointer;">{{ $task->created_at }}</td>
+						<td onclick="location.href='{{ route('task.show', ['todo' => $todo, 'task' => $task]) }}'" style="cursor: pointer;">{{ $task->name }}</td>
+						<td onclick="location.href='{{ route('task.show', ['todo' => $todo, 'task' => $task]) }}'" style="cursor: pointer;">{{ $task->description }}</td>
+						<td onclick="location.href='{{ route('task.show', ['todo' => $todo, 'task' => $task]) }}'" style="cursor: pointer;">{{ $task->priority }}</td>
+						<td onclick="location.href='{{ route('task.show', ['todo' => $todo, 'task' => $task]) }}'" style="cursor: pointer;">{{ $task->user->name }}</td>
+						<td onclick="location.href='{{ route('task.show', ['todo' => $todo, 'task' => $task]) }}'" style="cursor: pointer;">{{ $task->created_at }}</td>
 						<td class="collapsing">
 							<form method="POST">
 								{{ csrf_field() }}

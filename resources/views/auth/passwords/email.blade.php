@@ -5,7 +5,7 @@
 @section('container')
 <?php
 $classcss = '';
-if( $errors->has('email') != false ) {
+if( $errors->any() != false ) {
 	$classcss = 'error';
 } else if( session('status') != null ) {
 	$classcss = 'success';
@@ -13,18 +13,8 @@ if( $errors->has('email') != false ) {
 ?>
 <form class="ui form stacked segment {{ $classcss }}" method="POST" action="{{ route('password.email') }}">
 	{{ csrf_field() }}
-	<div class="ui error message">
-		<i class="close icon"></i>
-		<div class="header">Erreur</div>
-		<ul class="list">
-			<li>{{ $errors->first('email') }}</li>
-		</ul>
-	</div>
-	<div class="ui success message">
-		<i class="close icon"></i>
-		<div class="header">Succès</div>
-		<p>{{ session('status') }}</p>
-	</div>
+	{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
+	{!! sendMessage('success', session('status'), ['header_message' => 'Succès']) !!}
 	<div class="field {{ $errors->has('email') ? 'error' : '' }}">
 		<div class="ui left icon input">
 			<i class="mail icon"></i>
