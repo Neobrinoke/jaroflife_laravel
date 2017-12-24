@@ -12,7 +12,7 @@ use App\TodosUser;
 class TodoController extends Controller
 {
 	public function __construct() {
-		$this->middleware('auth');
+		$this->middleware( 'auth' );
 	}
 	
 	/**
@@ -21,7 +21,7 @@ class TodoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index() {
-		return view('todo.index', ['todos' => Auth::user()->todos]);
+		return view( 'todo.index', ['todos' => Auth::user()->todos] );
 	}
 
 	/**
@@ -30,7 +30,7 @@ class TodoController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function create() {
-		return view('todo.create');
+		return view( 'todo.create' );
 	}
 
 	/**
@@ -39,11 +39,11 @@ class TodoController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request)
+	public function store( Request $request )
 	{
 		$todo = Todo::create([
-			'name' => $request->input('name'),
-			'description' => $request->input('description'),
+			'name' => $request->input( 'name' ),
+			'description' => $request->input( 'description' ),
 			'author_id' => Auth::user()->id
 		]);
 		
@@ -52,7 +52,7 @@ class TodoController extends Controller
 			'todo_id' => $todo->id,
 			'authority_id' => 1
 		]);
-		return redirect()->route('todo.index');
+		return redirect()->route( 'todo.index' );
 	}
 
 	/**
@@ -61,12 +61,12 @@ class TodoController extends Controller
 	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show(Todo $todo)
+	public function show( Todo $todo )
 	{
-		$this->authorize('show', $todo);
+		$this->authorize( 'show', $todo );
 
 		$title = "Mes tâches pour la liste [$todo->name]";
-		return view('task.index', compact('todo', 'title'));
+		return view( 'task.index', compact( 'todo', 'title' ) );
 	}
 
 	/**
@@ -75,12 +75,12 @@ class TodoController extends Controller
 	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit(Todo $todo)
+	public function edit( Todo $todo )
 	{
-		$this->authorize('edit', $todo);
+		$this->authorize( 'edit', $todo );
 
 		$title = "Détails de la liste [$todo->name]";
-		return view('todo.edit', compact('todo', 'title'));
+		return view( 'todo.edit', compact( 'todo', 'title' ) );
 	}
 
 	/**
@@ -90,31 +90,31 @@ class TodoController extends Controller
 	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, Todo $todo)
+	public function update( Request $request, Todo $todo )
 	{
-		$this->authorize('edit', $todo);
+		$this->authorize( 'edit', $todo );
 
-		if( $request->has('edit_todo'))
+		if( $request->has( 'edit_todo' ) )
 		{
-			$todo->name = $request->input('name');
-			$todo->description = $request->input('description');
+			$todo->name = $request->input( 'name' );
+			$todo->description = $request->input( 'description' );
 			$todo->save();
 		}
-		else if($request->has('edit_member') || $request->has('expulse_member'))
+		else if( $request->has( 'edit_member' ) || $request->has( 'expulse_member' ) )
 		{
 			$todo_user = TodosUser::where([
-				'user_id' => $request->input('user_id'),
+				'user_id' => $request->input( 'user_id' ),
 				'todo_id' => $todo->id
 			])->firstOrFail();
 
-			if($request->has('edit_member'))
+			if( $request->has( 'edit_member' ) )
 			{
-				$todo_user->authority_id = $request->input('authority_id');
+				$todo_user->authority_id = $request->input( 'authority_id' );
 				$todo_user->save();
 			}
 			else $todo_user->delete();
 		}
-		return redirect()->route('todo.edit', compact('todo'));
+		return redirect()->route( 'todo.edit', compact( 'todo' ) );
 	}
 
 	/**
@@ -123,13 +123,13 @@ class TodoController extends Controller
 	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(Todo $todo)
+	public function destroy( Todo $todo )
 	{
-		$this->authorize('edit', $todo);
+		$this->authorize( 'edit', $todo );
 
-		TodosUser::where('todo_id', $todo->id)->delete();
-		Task::where('todo_id', $todo->id)->delete();
+		TodosUser::where( 'todo_id', $todo->id )->delete();
+		Task::where( 'todo_id', $todo->id )->delete();
 		$todo->delete();
-		return redirect()->route('todo.index');
+		return redirect()->route( 'todo.index' );
 	}
 }

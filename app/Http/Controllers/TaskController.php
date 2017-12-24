@@ -11,7 +11,7 @@ use App\Task;
 class TaskController extends Controller
 {
 	public function __construct() {
-		$this->middleware('auth');
+		$this->middleware( 'auth' );
 	}
 
 	/**
@@ -20,8 +20,8 @@ class TaskController extends Controller
 	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create(Todo $todo) {
-		return view('task.create');
+	public function create( Todo $todo ) {
+		return view( 'task.create' );
 	}
 
 	/**
@@ -31,16 +31,16 @@ class TaskController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, Todo $todo)
+	public function store( Request $request, Todo $todo )
 	{
 		Task::create([
-			'name' => $request->input('name'),
-			'description' => $request->input('description'),
-			'priority' => $request->input('priority'),
+			'name' => $request->input( 'name' ),
+			'description' => $request->input( 'description' ),
+			'priority' => $request->input( 'priority' ),
 			'author_id' => Auth::id(),
 			'todo_id' => $todo->id
 		]);
-		return redirect()->route('todo.show', compact('todo'));
+		return redirect()->route( 'todo.show', compact( 'todo' ) );
 	}
 
 	/**
@@ -50,14 +50,12 @@ class TaskController extends Controller
 	 * @param  \App\Task  $task
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show(Todo $todo, Task $task)
+	public function show( Todo $todo, Task $task )
 	{
-		if(Auth::user()->can('show', $task))
-		{
-			$title = "Tâche - $task->name";
-			return view('task.show', compact('todo', 'task', 'title'));
-		}
-		else return view('no_perm');
+		$this->authorize( 'show', $todo, $task );
+
+		$title = "Tâche - $task->name";
+		return view( 'task.show', compact( 'todo', 'task', 'title' ) );
 	}
 
 	/**
@@ -67,14 +65,12 @@ class TaskController extends Controller
 	 * @param  \App\Task  $task
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit(Todo $todo, Task $task)
+	public function edit( Todo $todo, Task $task )
 	{
-		if(Auth::user()->can('edit', $task))
-		{
-			$title = "Modifier la tâche - $task->name";
-			return view('task.edit', compact('todoId', 'task', 'title'));
-		}
-		else return view('no_perm');
+		$this->authorize( 'edit', $todo, $task );
+
+		$title = "Modifier la tâche - $task->name";
+		return view( 'task.edit', compact( 'todo', 'task', 'title' ) );
 	}
 
 	/**
@@ -85,16 +81,14 @@ class TaskController extends Controller
 	 * @param  \App\Task  $task
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, Todo $todo, Task $task)
+	public function update( Request $request, Todo $todo, Task $task )
 	{
-		if(Auth::user()->can('edit', $task))
-		{
-			$task->name = $request->input('name');
-			$task->description = $request->input('description');
-			$task->save();
-			return redirect()->route('task.show', compact('todo', 'task'));
-		}
-		else return view('no_perm');
+		$this->authorize( 'edit', $todo, $task );
+
+		$task->name = $request->input( 'name' );
+		$task->description = $request->input( 'description' );
+		$task->save();
+		return redirect()->route( 'task.show', compact( 'todo', 'task' ) );
 	}
 
 	/**
@@ -102,17 +96,15 @@ class TaskController extends Controller
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \App\Todo  $todo
-	 * @param  \App\Task  $task
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(Request $request, Todo $todo)
+	public function destroy( Request $request, Todo $todo )
 	{
-		$task = Task::findByTodo($todo->id, $request->input('task_id'));
-		if(Auth::user()->can('edit', $task))
-		{
-			$task->delete();
-			return redirect()->route('todo.show', compact('todo'));
-		}
-		else return view('no_perm');
+		$task = Task::findByTodo( $todo->id, $request->input( 'task_id' ) );
+
+		$this->authorize( 'delete', $task );
+
+		$task->delete();
+		return redirect()->route( 'todo.show', compact( 'todo' ) );
 	}
 }
