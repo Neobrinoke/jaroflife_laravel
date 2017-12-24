@@ -6,37 +6,40 @@
 <div class="ui attached message">
 	<h1 class="header">
 		<span>{{ $title }}</span>
-		<span><a class="ui right floated basic icon button" onclick="$('#add_task_modal').modal('show');" data-tooltip="Ajouter une tâche"><i class="add icon"></i></a></span>
+		<span><a class="ui right floated basic icon button" onclick="$('#add_task_modal').modal({blurring: true}).modal('show');" data-tooltip="Ajouter une tâche"><i class="add icon"></i></a></span>
 	</h1>
 </div>
 <div class="ui modal" id="add_task_modal">
+	<i class="close icon"></i>
 	<div class="header">Ajouter une tâche</div>
 	<div class="content">
-		<form class="ui form" action="" method="POST">
-		{{ csrf_field() }}
-		<input type="hidden" name="_method" value="PUT">
-		<div class="field">
-			<div class="two fields">
-				<div class="field">
-					<label>Nom</label>
-					<input type="text" name="name" id="name">
-				</div>
-				<div class="field">
-					<label>Priorité</label>
-					<select class="ui dropdown" name="priority" id="priority">
-						<option value="1">Basse</option>
-						<option value="2">Moyenne</option>
-						<option value="3">Haute</option>
-					</select>
+		<form class="ui form" id="add_task_form" method="POST">
+			{{ csrf_field() }}
+			<input type="hidden" name="_method" value="PUT">
+			<div class="field">
+				<div class="two fields">
+					<div class="field">
+						<label>Nom</label>
+						<input type="text" name="name" id="name">
+					</div>
+					<div class="field">
+						<label>Priorité</label>
+						<select class="ui dropdown" name="priority" id="priority">
+							<option value="1">Basse</option>
+							<option value="2">Moyenne</option>
+							<option value="3">Haute</option>
+						</select>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="field">
-			<label>Text</label>
-			<textarea name="description" id="description" cols="30" rows="2" ></textarea>
-		</div>
-		<input class="ui fluid submit button teal" type="submit" value="Créer une nouvelle tâche" name="create_task">
+			<div class="field">
+				<label>Text</label>
+				<textarea name="description" id="description" cols="30" rows="5" ></textarea>
+			</div>
 		</form>
+	</div>
+	<div class="actions">
+		<button class="ui button teal" type="submit" name="create_task" onclick="$('#add_task_form').submit();">Créer une nouvelle tâche</button>
 	</div>
 </div>
 <div class="ui attached fluid segment">
