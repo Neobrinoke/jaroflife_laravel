@@ -15,16 +15,6 @@ class TaskController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @param  \App\Todo  $todo
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create( Todo $todo ) {
-		return view( 'task.create' );
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \App\Todo  $todo
@@ -44,51 +34,22 @@ class TaskController extends Controller
 	}
 
 	/**
-	 * Display the specified resource.
-	 *
-	 * @param  \App\Todo  $todo
-	 * @param  \App\Task  $task
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show( Todo $todo, Task $task )
-	{
-		$this->authorize( 'show', $todo, $task );
-
-		$title = "Tâche - $task->name";
-		return view( 'task.show', compact( 'todo', 'task', 'title' ) );
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  \App\Todo  $todo
-	 * @param  \App\Task  $task
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit( Todo $todo, Task $task )
-	{
-		$this->authorize( 'edit', $todo, $task );
-
-		$title = "Modifier la tâche - $task->name";
-		return view( 'task.edit', compact( 'todo', 'task', 'title' ) );
-	}
-
-	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \App\Todo  $todo
-	 * @param  \App\Task  $task
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update( Request $request, Todo $todo, Task $task )
+	public function update( Request $request, Todo $todo )
 	{
+		$task = Task::findOrFail( $request->input( 'task_id' ) );
 		$this->authorize( 'edit', $todo, $task );
 
 		$task->name = $request->input( 'name' );
 		$task->description = $request->input( 'description' );
+		$task->priority = $request->input( 'priority' );
 		$task->save();
-		return redirect()->route( 'task.show', compact( 'todo', 'task' ) );
+		return redirect()->route( 'todo.show', compact( 'todo' ) );
 	}
 
 	/**

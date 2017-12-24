@@ -66,7 +66,7 @@ class TodoController extends Controller
 		$this->authorize( 'show', $todo );
 
 		$title = "Mes tâches pour la liste [$todo->name]";
-		return view( 'task.index', compact( 'todo', 'title' ) );
+		return view( 'todo.show', compact( 'todo', 'title' ) );
 	}
 
 	/**
