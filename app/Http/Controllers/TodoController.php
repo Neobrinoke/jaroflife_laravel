@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Todo;
+use App\Task;
+use App\User;
+use App\TodosUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-use App\Task;
-use App\TodosUser;
 
 class TodoController extends Controller
 {
@@ -73,7 +73,8 @@ class TodoController extends Controller
 		$this->authorize( 'edit_todo', $todo );
 
 		$title = "Détails de la liste [$todo->name]";
-		return view( 'todo.edit', compact( 'todo', 'title' ) );
+		$users = User::findAllWithoutMe();
+		return view( 'todo.edit', compact( 'todo', 'title', 'users' ) );
 	}
 
 	/**
@@ -124,5 +125,26 @@ class TodoController extends Controller
 		Task::where( 'todo_id', $todo->id )->delete();
 		$todo->delete();
 		return redirect()->route( 'todo.index' );
+	}
+
+	/**
+	 * Add some collab on the todo
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \App\Todo  $todo
+	 * @return \Illuminate\Http\Response
+	 */
+	public function add_collab( Request $request, Todo $todo )
+	{
+		$users_id = explode( ',', $request->input( 'users' ) );
+		foreach( $users_id as $user_id )
+		{
+			TodosUser::updateOrCreate([
+				'user_id' => $user_id,
+				'todo_id' => $todo->id,
+				'authority_id' => 3
+			]);
+		}
+		return redirect()->route( 'todo.edit', compact( 'todo' ) );
 	}
 }

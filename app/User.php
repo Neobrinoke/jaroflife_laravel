@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -27,7 +28,13 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    // RELATIONS
     public function todos() {
         return $this->hasMany( 'App\TodosUser' );
+    }
+
+    // SCOPES
+    public function scopeFindAllWithoutMe( $query ) {
+        return $query->where( 'id', '!=', Auth::id() )->get();
     }
 }

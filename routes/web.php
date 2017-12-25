@@ -25,6 +25,7 @@ Route::get('/todos/', 'TodoController@index')->name('todo.index');
 Route::get('/todo/edit/{todo}/', 'TodoController@edit')->name('todo.edit');
 Route::get('/todo/{todo}/tasks/', 'TodoController@show')->name('todo.show');
 Route::post('/todos/', 'TodoController@store')->name('todo.store');
+Route::put('/todo/edit/{todo}/', 'TodoController@add_collab')->name('todo.add_collab');
 Route::post('/todo/edit/{todo}/', 'TodoController@update')->name('todo.update');
 Route::delete('/todo/edit/{todo}/', 'TodoController@destroy')->name('todo.destroy');
 

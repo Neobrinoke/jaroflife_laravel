@@ -6,7 +6,7 @@
 <div class="ui attached message">
 	<h1 class="header">
 		<span>{{ $title }}</span>
-		<span><a class="ui right floated basic icon button" href="#" data-tooltip="Ajouter un utilisateur"><i class="user add icon"></i></a></span>
+		<span><a class="ui right floated basic icon button" onclick="$('#add_collab_modal').modal({blurring: true}).modal('show');" data-tooltip="Ajouter un utilisateur"><i class="user add icon"></i></a></span>
 	</h1>
 </div>
 <div class="ui attached fluid segment">
@@ -81,9 +81,9 @@
 		{{ csrf_field() }}
 		<input name="_method" type="hidden" value="DELETE" />
 	</form>
-	<button class="ui button red" onclick="$('#conf_remove_todo').modal({blurring: true}).modal('show');">Supprimer cette liste !</button>
+	<button class="ui button red" onclick="$('#conf_remove_todo_modal').modal({blurring: true}).modal('show');">Supprimer cette liste !</button>
 </div>
-<div class="ui tiny modal" id="conf_remove_todo">
+<div class="ui tiny modal" id="conf_remove_todo_modal">
 	<i class="close icon"></i>
 	<div class="header">Supprimer une liste</div>
 	<div class="content">
@@ -93,6 +93,31 @@
 	<div class="actions">
 		<button class="ui negative left labeled icon button"><i class="close icon"></i>Non</button>
 		<button class="ui positive right labeled icon button" onclick="$('#delete_list').submit();">Oui<i class="checkmark icon"></i></button>
+	</div>
+</div>
+<div class="ui modal" id="add_collab_modal">
+	<i class="close icon"></i>
+	<div class="header">Ajouter un collaborateur</div>
+	<div class="content">
+		<p>Pour ajouter un collaborateur vous pouvez parcourir la liste ci-dessous afin de trouver la personne que vous voulez !</p>
+		<form class="ui form" id="add_collab_form" method="POST">
+			{{ csrf_field() }}
+			<input type="hidden" name="_method" value="PUT">
+			<div class="ui fluid multiple search selection dropdown">
+				<input type="hidden" name="users">
+				<i class="dropdown icon"></i>
+				<div class="default text">Utilisateurs</div>
+				<div class="menu">
+					@foreach( $users as $user )
+						<div class="item" data-value="{{ $user->id }}">{{ $user->name }}</div>
+					@endforeach
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="actions">
+		<button class="ui negative left labeled icon button"><i class="close icon"></i>Non</button>
+		<button class="ui positive right labeled icon button" onclick="$('#add_collab_form').submit();">Ajouter<i class="add icon"></i></button>
 	</div>
 </div>
 @endsection
