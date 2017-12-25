@@ -32,6 +32,8 @@ class TodoController extends Controller
 	 */
 	public function store( Request $request )
 	{
+		$this->authorize( 'create_todo', $user );
+
 		$todo = Todo::create([
 			'name' => $request->input( 'name' ),
 			'description' => $request->input( 'description' ),
@@ -54,7 +56,7 @@ class TodoController extends Controller
 	 */
 	public function show( Todo $todo )
 	{
-		$this->authorize( 'show', $todo );
+		$this->authorize( 'show_todo', $todo );
 
 		$title = "Mes tâches pour la liste [$todo->name]";
 		return view( 'todo.show', compact( 'todo', 'title' ) );
@@ -68,7 +70,7 @@ class TodoController extends Controller
 	 */
 	public function edit( Todo $todo )
 	{
-		$this->authorize( 'edit', $todo );
+		$this->authorize( 'edit_todo', $todo );
 
 		$title = "Détails de la liste [$todo->name]";
 		return view( 'todo.edit', compact( 'todo', 'title' ) );
@@ -83,7 +85,7 @@ class TodoController extends Controller
 	 */
 	public function update( Request $request, Todo $todo )
 	{
-		$this->authorize( 'edit', $todo );
+		$this->authorize( 'edit_todo', $todo );
 
 		if( $request->has( 'edit_todo' ) )
 		{
@@ -116,7 +118,7 @@ class TodoController extends Controller
 	 */
 	public function destroy( Todo $todo )
 	{
-		$this->authorize( 'edit', $todo );
+		$this->authorize( 'edit_todo', $todo );
 
 		TodosUser::where( 'todo_id', $todo->id )->delete();
 		Task::where( 'todo_id', $todo->id )->delete();
