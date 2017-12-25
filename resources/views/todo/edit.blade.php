@@ -77,10 +77,22 @@
 		</div>
 	</div>
 	<h4 class="ui dividing header">Zone de danger</h4>
-	<form class="ui form" method="POST">
+	<form class="ui form" id="delete_list" method="POST">
 		{{ csrf_field() }}
 		<input name="_method" type="hidden" value="DELETE" />
-		<input type="submit" class="ui button red" value="Supprimer cette liste !">
 	</form>
+	<button class="ui button red" onclick="$('#conf_remove_todo').modal({blurring: true}).modal('show');">Supprimer cette liste !</button>
+</div>
+<div class="ui tiny modal" id="conf_remove_todo">
+	<i class="close icon"></i>
+	<div class="header">Supprimer une liste</div>
+	<div class="content">
+		<p>Voulez-vous vraiment supprimer cette liste ? L'action est irreversible !</p>
+		<p>Toutes les tâches attribué à cette liste, ainsi que tous ses collaborateurs, seront supprimé.</p>
+	</div>
+	<div class="actions">
+		<button class="ui negative left labeled icon button"><i class="close icon"></i>Non</button>
+		<button class="ui positive right labeled icon button" onclick="$('#delete_list').submit();">Oui<i class="checkmark icon"></i></button>
+	</div>
 </div>
 @endsection
