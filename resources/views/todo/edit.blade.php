@@ -49,12 +49,16 @@
 									<td>{{ $member->joined_at }}</td>
 									<td class="collapsing">
 										<div class="field">
-											<!-- <select class="ui dropdown" name="authority_id"> -->
-											<select name="authority_id">
-												<option value="1" {{ $member->authority_id == 1 ? 'selected' : '' }}>Administrateur</option>
-												<option value="2" {{ $member->authority_id == 2 ? 'selected' : '' }}>Modérateur</option>
-												<option value="3" {{ $member->authority_id == 3 ? 'selected' : '' }}>Utlisateur</option>
-											</select>
+											<div class="ui selection dropdown">
+												<input type="hidden" name="authority_id" value="{{ $member->authority_id }}">
+												<i class="dropdown icon"></i>
+												<div class="default text">Select Country</div>
+												<div class="menu">
+													<div class="item" data-value="1">Administrateur</div>
+													<div class="item" data-value="2">Modérateur</div>
+													<div class="item" data-value="3">Utlisateur</div>
+												</div>
+											</div>
 										</div>
 									</td>
 									<td class="collapsing"><input class="ui button teal" type="submit" name="edit_member" value="Editer" /></td>
