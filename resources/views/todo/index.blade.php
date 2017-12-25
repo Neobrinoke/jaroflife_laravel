@@ -3,50 +3,70 @@
 @section('title', 'Mes listes')
 
 @section('container')
-<div class="ui attached message">
-	<h1 class="header">
-		<span>Mes listes</span>
-		<span><a class="ui right floated basic icon button" href="{{ route('todo.create') }}" data-tooltip="Ajouter une liste"><i class="add icon"></i></a></span>
-	</h1>
-</div>
-<div class="ui attached fluid segment">
-	@if( $todos->isNotEmpty() )
-		<div class="ui three column stackable grid">
-			@foreach( $todos as $todo )
-				<?php
-				$members = count( $todo->todo->members );
-				$tasks = count( $todo->todo->tasks );
+	<div class="ui attached message">
+		<h1 class="header">
+			<span>Mes listes</span>
+			<span><a class="ui right floated basic icon button" onclick="$('#add_todo_modal').modal({blurring: true}).modal('show');" data-tooltip="Ajouter une liste"><i class="add icon"></i></a></span>
+		</h1>
+	</div>
+	<div class="ui modal" id="add_todo_modal">
+		<i class="close icon"></i>
+		<div class="header">Ajouter une liste</div>
+		<div class="content">
+			<form class="ui form" id="add_todo_form" method="POST">
+				{{ csrf_field() }}
+				<div class="field">
+					<label for="name">Nom</label>
+					<input type="text" name="name" id="name" placeholder="Nom de la liste">
+				</div>
+				<div class="field">
+					<label for="description">Description</label>
+					<textarea name="description" id="description" cols="30" rows="5" placeholder="Ecrivez votre description ici"></textarea>
+				</div>
+			</form>
+		</div>
+		<div class="actions">
+			<button class="ui button teal" type="submit" name="create_todo" onclick="$('#add_todo_form').submit();">Créer une nouvelle liste</button>
+		</div>
+	</div>
+	<div class="ui attached fluid segment">
+		@if( $todos->isNotEmpty() )
+			<div class="ui three column stackable grid">
+				@foreach( $todos as $todo )
+					<?php
+					$members = count( $todo->todo->members ) + 1;
+					$tasks = count( $todo->todo->tasks );
 
-				$members .= $members > 1 ? ' Membres' : ' Membre';
-				$tasks .= $tasks > 1 ? ' Tâches' : ' Tâche';
-				?>
-				<div class="column">
-					<div class="ui cards">
-						<div class="card">
-							<div class="content">
-								<div class="header">{{ $todo->todo->name }}</div>
-								<div class="description">{{ $todo->todo->description }}</div>
-							</div>
-							<div class="extra content">
-								<span><i class="user icon"></i>{{ $members }}</span>
-								<span class="right floated"><i class="browser icon"></i>{{ $tasks }}</span>
-							</div>
-							<div class="extra content">
-								<span><i class="calendar icon"></i>Rejoins le {{ $todo->joined_at }}</span>
-							</div>
-							<div class="extra content">
-								<div class="ui two buttons">
-									<a href="{{ route('todo.edit', ['todoId' => $todo->todo->id]) }}" class="ui basic button purple"><i class="options icon"></i>Détails</a>
-									<a href="{{ route('todo.show', ['todoId' => $todo->todo->id]) }}" class="ui basic button blue">Afficher<i class="arrow right icon"></i></a>
+					$members .= $members > 1 ? ' Membres' : ' Membre';
+					$tasks .= $tasks > 1 ? ' Tâches' : ' Tâche';
+					?>
+					<div class="column">
+						<div class="ui cards">
+							<div class="card">
+								<div class="content">
+									<div class="header">{{ $todo->todo->name }}</div>
+									<div class="description">{{ $todo->todo->description }}</div>
+								</div>
+								<div class="extra content">
+									<span><i class="user icon"></i>{{ $members }}</span>
+									<span class="right floated"><i class="browser icon"></i>{{ $tasks }}</span>
+								</div>
+								<div class="extra content">
+									<span><i class="calendar icon"></i>Rejoins le {{ $todo->joined_at }}</span>
+								</div>
+								<div class="extra content">
+									<div class="ui two buttons">
+										<a href="{{ route('todo.edit', ['todo' => $todo->todo]) }}" class="ui basic button purple"><i class="options icon"></i>Détails</a>
+										<a href="{{ route('todo.show', ['todo' => $todo->todo]) }}" class="ui basic button blue">Afficher<i class="arrow right icon"></i></a>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			@endforeach
-		</div>
-	@else
-		{!! sendMessage('warning', 'Aucune liste disponible') !!}
-	@endif
-</div>
+				@endforeach
+			</div>
+		@else
+			{!! sendMessage('warning', 'Aucune liste disponible') !!}
+		@endif
+	</div>
 @endsection

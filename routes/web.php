@@ -22,10 +22,9 @@ Auth::routes();
  * Todo routes
  */
 Route::get('/todos/', 'TodoController@index')->name('todo.index');
-Route::get('/todo/create/', 'TodoController@create')->name('todo.create');
 Route::get('/todo/edit/{todo}/', 'TodoController@edit')->name('todo.edit');
 Route::get('/todo/{todo}/tasks/', 'TodoController@show')->name('todo.show');
-Route::post('/todo/create/', 'TodoController@store')->name('todo.store');
+Route::post('/todos/', 'TodoController@store')->name('todo.store');
 Route::post('/todo/edit/{todo}/', 'TodoController@update')->name('todo.update');
 Route::delete('/todo/edit/{todo}/', 'TodoController@destroy')->name('todo.destroy');
 
