@@ -13,6 +13,9 @@
 	<div class="ui grid">
 		<div class="six wide column">
 			<h4 class="ui dividing header">Détails</h4>
+			@if( $errors->any() )
+				{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
+			@endif
 			<form class="ui form" method="POST">
 				{{ csrf_field() }}
 				<div class="field">

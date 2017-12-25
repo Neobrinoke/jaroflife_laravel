@@ -24,10 +24,10 @@ class TodosUser extends Model
 	}
 
 	// SCOPES
-	public function scopeFindByTodoAndUser( $query, $todo, $user ) {
+	public function scopeFindByTodoAndUser( $query, $todoId, $userId ) {
 		return $query->where([
-			'user_id' => $user->id,
-			'todo_id' => $todo->id
+			'user_id' => $userId,
+			'todo_id' => $todoId
 		])->firstOrFail();
 	}
 }

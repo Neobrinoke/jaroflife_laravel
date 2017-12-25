@@ -32,14 +32,16 @@ class TodoController extends Controller
 	 */
 	public function store( Request $request )
 	{
-		$todo = Todo::create([
-			'name' => $request->input( 'name' ),
-			'description' => $request->input( 'description' ),
-			'author_id' => Auth::user()->id
+		$validate_data = $request->validate([
+            'name' => 'required|string|max:255|min:4',
+            'description' => 'required|string|max:255|min:10',
 		]);
+		$validate_data['author_id'] = Auth::id();
+		
+		$todo = Todo::create( $validate_data );
 		
 		TodosUser::create([
-			'user_id' => Auth::user()->id,
+			'user_id' => Auth::id(),
 			'todo_id' => $todo->id,
 			'authority_id' => 1
 		]);
@@ -87,17 +89,17 @@ class TodoController extends Controller
 
 		if( $request->has( 'edit_todo' ) )
 		{
-			$todo->name = $request->input( 'name' );
-			$todo->description = $request->input( 'description' );
+			$validate_data = $request->validate([
+				'name' => 'required|string|max:255|min:4',
+				'description' => 'required|string|max:255|min:10',
+			]);
+
+			$todo->fill( $validate_data );
 			$todo->save();
 		}
 		else if( $request->has( 'edit_member' ) || $request->has( 'expulse_member' ) )
 		{
-			$todo_user = TodosUser::where([
-				'user_id' => $request->input( 'user_id' ),
-				'todo_id' => $todo->id
-			])->firstOrFail();
-
+			$todo_user = TodosUser::findByTodoAndUser( $todo->id, $request->input( 'user_id' ) );
 			if( $request->has( 'edit_member' ) )
 			{
 				$todo_user->authority_id = $request->input( 'authority_id' );

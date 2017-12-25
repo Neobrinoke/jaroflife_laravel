@@ -21,7 +21,7 @@ class TodoPolicy
 	 */
 	public function show_todo( User $user, Todo $todo )
 	{
-		$todo_user = TodosUser::findByTodoAndUser( $todo, $user );
+		$todo_user = TodosUser::findByTodoAndUser( $todo->id, $user->id );
 		if( $todo_user ) {
 			return true;
 		} else {
@@ -38,7 +38,7 @@ class TodoPolicy
 	 */
 	public function edit_todo( User $user, Todo $todo )
 	{
-		$todo_user = TodosUser::findByTodoAndUser( $todo, $user );
+		$todo_user = TodosUser::findByTodoAndUser( $todo->id, $user->id );
 		if( $todo_user && ( $todo_user->authority_id == 1 ) ) {
 			return true;
 		} else {
@@ -55,7 +55,7 @@ class TodoPolicy
 	 */
 	public function create_task( User $user, Todo $todo )
 	{
-		$todo_user = TodosUser::findByTodoAndUser( $todo, $user );
+		$todo_user = TodosUser::findByTodoAndUser( $todo->id, $user->id );
 		if( $todo_user ) {
 			return true;
 		} else {
@@ -74,7 +74,7 @@ class TodoPolicy
 	 */
 	public function edit_task( User $user, Todo $todo, Task $task )
 	{
-		$todo_user = TodosUser::findByTodoAndUser( $todo, $user );
+		$todo_user = TodosUser::findByTodoAndUser( $todo->id, $user->id );
 		if( $todo_user && $task->todo_id == $todo->id && ( $todo_user->authority_id == 1 || $task->author_id == $user->id ) ) {
 			return true;
 		} else {

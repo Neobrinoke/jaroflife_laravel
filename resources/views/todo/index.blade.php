@@ -9,10 +9,13 @@
 			<span><a class="ui right floated basic icon button" onclick="$('#add_todo_modal').modal({blurring: true}).modal('show');" data-tooltip="Ajouter une liste"><i class="add icon"></i></a></span>
 		</h1>
 	</div>
-	<div class="ui modal" id="add_todo_modal">
+	<div class="ui modal {{ $errors->any() ? 'errors' : '' }}" id="add_todo_modal">
 		<i class="close icon"></i>
 		<div class="header">Ajouter une liste</div>
 		<div class="content">
+			@if( $errors->any() )
+				{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
+			@endif
 			<form class="ui form" id="add_todo_form" method="POST">
 				{{ csrf_field() }}
 				<div class="field">
