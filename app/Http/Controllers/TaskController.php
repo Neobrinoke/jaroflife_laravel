@@ -25,13 +25,15 @@ class TaskController extends Controller
 	{
 		$this->authorize( 'create_task', $todo );
 
-		Task::create([
-			'name' => $request->input( 'name' ),
-			'description' => $request->input( 'description' ),
-			'priority' => $request->input( 'priority' ),
-			'author_id' => Auth::id(),
-			'todo_id' => $todo->id
+		$validate_data = $request->validate([
+			'name' => 'required|string|max:255|min:4',
+			'description' => 'required|string|max:255|min:10',
+			'priority' => 'required|int'
 		]);
+		$validate_data['author_id'] = Auth::id();
+		$validate_data['todo_id'] = $todo->id;
+
+		Task::create( $validate_data );
 		return redirect()->route( 'todo.show', compact( 'todo' ) );
 	}
 
@@ -47,9 +49,13 @@ class TaskController extends Controller
 		$task = Task::findByTodo( $todo->id, $request->input( 'task_id' ) );
 		$this->authorize( 'edit_task', [$todo, $task] );
 
-		$task->name = $request->input( 'name' );
-		$task->description = $request->input( 'description' );
-		$task->priority = $request->input( 'priority' );
+		$validate_data = $request->validate([
+			'name' => 'required|string|max:255|min:4',
+			'description' => 'required|string|max:255|min:10',
+			'priority' => 'required|int'
+		]);
+
+		$task->fill( $validate_data );
 		$task->save();
 		return redirect()->route( 'todo.show', compact( 'todo' ) );
 	}

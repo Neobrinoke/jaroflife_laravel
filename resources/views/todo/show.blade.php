@@ -50,10 +50,13 @@
 		{!! sendMessage('warning', 'Aucune tâche disponible') !!}
 	@endif
 </div>
-<div class="ui modal" id="add_task_modal">
+<div class="ui modal {{ $errors->any() && old('task_id') == null ? 'errors' : '' }}" id="add_task_modal">
 	<i class="close icon"></i>
 	<div class="header">Ajouter une tâche</div>
 	<div class="content">
+		@if( $errors->any() && old('task_id') == null )
+			{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
+		@endif
 		<form class="ui form" id="add_task_form" method="POST">
 			{{ csrf_field() }}
 			<input type="hidden" name="_method" value="PUT">
@@ -84,10 +87,13 @@
 	</div>
 </div>
 @foreach( $todo->tasks as $task )
-	<div class="ui modal" id="edit_task_{{ $task->id }}">
+	<div class="ui modal {{ $errors->any() && $task->id == old('task_id') ? 'errors' : '' }}" id="edit_task_{{ $task->id }}">
 		<i class="close icon"></i>
 		<div class="header">Editer une tâche</div>
 		<div class="content">
+			@if( $errors->any() && $task->id == old('task_id') )
+				{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
+			@endif
 			<form class="ui form" id="edit_task_{{ $task->id }}_form" method="POST">
 				{{ csrf_field() }}
 				<input type="hidden" name="task_id" value="{{ $task->id }}"/>
