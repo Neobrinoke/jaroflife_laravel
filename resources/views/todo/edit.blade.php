@@ -52,7 +52,7 @@
 											<div class="ui selection dropdown">
 												<input type="hidden" name="authority_id" value="{{ $member->authority_id }}">
 												<i class="dropdown icon"></i>
-												<div class="default text">Select Country</div>
+												<div class="default text">Grade du membre</div>
 												<div class="menu">
 													<div class="item" data-value="1">Administrateur</div>
 													<div class="item" data-value="2">Modérateur</div>
