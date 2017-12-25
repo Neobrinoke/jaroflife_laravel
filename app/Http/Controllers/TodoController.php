@@ -32,8 +32,6 @@ class TodoController extends Controller
 	 */
 	public function store( Request $request )
 	{
-		$this->authorize( 'create_todo', $user );
-
 		$todo = Todo::create([
 			'name' => $request->input( 'name' ),
 			'description' => $request->input( 'description' ),

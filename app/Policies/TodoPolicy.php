@@ -30,16 +30,6 @@ class TodoPolicy
 	}
 
 	/**
-	 * Determine whether the user can create todos.
-	 *
-	 * @param  \App\User  $user
-	 * @return mixed
-	 */
-	public function create_todo( User $user ) {
-		return true;
-	}
-
-	/**
 	 * Determine whether the user can edit (update and delete) the todo.
 	 *
 	 * @param  \App\User  $user
