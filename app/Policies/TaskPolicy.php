@@ -10,59 +10,41 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TaskPolicy
 {
-    use HandlesAuthorization;
+	use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view the task.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Todo  $todo
-     * @param  \App\Task  $task
-     * @return mixed
-     */
-    public function show( User $user, Todo $todo, Task $task )
-    {
-        $todo_user = TodosUser::where([
-			'user_id' => $user->id,
-			'todo_id' => $todo->id
-		])->firstOrFail();
-
+	/**
+	 * Determine if the user are in the todo group.
+	 *
+	 * @param  \App\User  $user
+	 * @param  \App\Todo  $todo
+	 * @return boolean
+	 */
+	public function create( User $user, Todo $todo )
+	{
+		$todo_user = TodosUser::findByTodoAndUser( $todo, $user );
 		if( $todo_user ) {
 			return true;
 		} else {
 			return false;
 		}
-    }
+	}
 
-    /**
-     * Determine whether the user can create tasks.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function create( User $user ) {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can update the task.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Task  $task
-     * @return mixed
-     */
-    public function edit( User $user, Task $task ) {
-        return true;
-    }
-
-    /**
-     * Determine whether the user can delete the task.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Task  $task
-     * @return mixed
-     */
-    public function delete( User $user, Task $task ) {
-        return true;
-    }
+	/**
+	 * Determine if the user can edit (update and delete) the task.
+	 * User can update and delete if he's admin or if the task was created by him
+	 *
+	 * @param  \App\User  $user
+	 * @param  \App\Todo  $todo
+	 * @param  \App\Task  $task
+	 * @return boolean
+	 */
+	public function edit( User $user, Todo $todo, Task $task )
+	{
+		$todo_user = TodosUser::findByTodoAndUser( $todo, $user );
+		if( $todo_user && $task->todo_id == $todo->id && $task->author_id == $user->id ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

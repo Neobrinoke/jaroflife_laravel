@@ -20,11 +20,7 @@ class TodoPolicy
 	 */
 	public function show( User $user, Todo $todo )
 	{
-		$todo_user = TodosUser::where([
-			'user_id' => $user->id,
-			'todo_id' => $todo->id
-		])->firstOrFail();
-
+		$todo_user = TodosUser::findByTodoAndUser( $todo, $user );
 		if( $todo_user ) {
 			return true;
 		} else {
@@ -51,11 +47,7 @@ class TodoPolicy
 	 */
 	public function edit( User $user, Todo $todo )
 	{
-		$todo_user = TodosUser::where([
-			'user_id' => $user->id,
-			'todo_id' => $todo->id
-		])->first();
-
+		$todo_user = TodosUser::findByTodoAndUser( $todo, $user );
 		if( $todo_user && ( $todo_user->authority_id == 1 ) ) {
 			return true;
 		} else {

@@ -14,14 +14,14 @@ class Todo extends Model
 	];
 
 	public function members() {
-		return $this->hasMany('App\TodosUser', 'todo_id', 'id')->where('user_id', '!=', Auth::id());
+		return $this->hasMany( 'App\TodosUser', 'todo_id', 'id' )->where( 'user_id', '!=', Auth::id() );
 	}
 
 	public function tasks() {
-		return $this->hasMany('App\Task', 'todo_id', 'id');
+		return $this->hasMany( 'App\Task', 'todo_id', 'id' );
 	}
 	
 	public function user() {
-		return $this->hasOne('App\User', 'id', 'author_id');
+		return $this->hasOne( 'App\User', 'id', 'author_id' );
 	}
 }

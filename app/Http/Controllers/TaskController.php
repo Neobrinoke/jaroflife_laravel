@@ -23,6 +23,8 @@ class TaskController extends Controller
 	 */
 	public function store( Request $request, Todo $todo )
 	{
+		$this->authorize( 'create', $todo );
+
 		Task::create([
 			'name' => $request->input( 'name' ),
 			'description' => $request->input( 'description' ),
@@ -42,7 +44,7 @@ class TaskController extends Controller
 	 */
 	public function update( Request $request, Todo $todo )
 	{
-		$task = Task::findOrFail( $request->input( 'task_id' ) );
+		$task = Task::findByTodo( $todo->id, $request->input( 'task_id' ) );
 		$this->authorize( 'edit', $todo, $task );
 
 		$task->name = $request->input( 'name' );
@@ -62,8 +64,7 @@ class TaskController extends Controller
 	public function destroy( Request $request, Todo $todo )
 	{
 		$task = Task::findByTodo( $todo->id, $request->input( 'task_id' ) );
-
-		$this->authorize( 'delete', $task );
+		$this->authorize( 'edit', $todo, $task );
 
 		$task->delete();
 		return redirect()->route( 'todo.show', compact( 'todo' ) );
