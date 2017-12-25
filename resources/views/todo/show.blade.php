@@ -50,35 +50,33 @@
 		{!! sendMessage('warning', 'Aucune tâche disponible') !!}
 	@endif
 </div>
-<div class="ui modal {{ $errors->any() && old('task_id') == null ? 'errors' : '' }}" id="add_task_modal">
+<div class="ui modal {{ $errors->any() && old('task_id') == null ? 'error' : '' }}" id="add_task_modal">
 	<i class="close icon"></i>
 	<div class="header">Ajouter une tâche</div>
 	<div class="content">
-		@if( $errors->any() && old('task_id') == null )
+		<form class="ui form {{ $errors->any() && old('task_id') == null ? 'error' : '' }}" id="add_task_form" method="POST">
 			{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
-		@endif
-		<form class="ui form" id="add_task_form" method="POST">
 			{{ csrf_field() }}
 			<input type="hidden" name="_method" value="PUT">
 			<div class="field">
 				<div class="two fields">
 					<div class="field">
 						<label>Nom</label>
-						<input type="text" name="name" id="name">
+						<input type="text" name="name" id="name" value="{{ old('name') }}">
 					</div>
 					<div class="field">
 						<label>Priorité</label>
 						<select class="ui dropdown" name="priority" id="priority">
-							<option value="1">Basse</option>
-							<option value="2">Moyenne</option>
-							<option value="3">Haute</option>
+							<option value="1" {{ old('priority') == 1 ? 'selected' : '' }}>Basse</option>
+							<option value="2" {{ old('priority') == 2 ? 'selected' : '' }}>Moyenne</option>
+							<option value="3" {{ old('priority') == 3 ? 'selected' : '' }}>Haute</option>
 						</select>
 					</div>
 				</div>
 			</div>
 			<div class="field">
 				<label>Text</label>
-				<textarea name="description" id="description" cols="30" rows="5" ></textarea>
+				<textarea name="description" id="description" cols="30" rows="5">{{ old('description') }}</textarea>
 			</div>
 		</form>
 	</div>
@@ -87,14 +85,12 @@
 	</div>
 </div>
 @foreach( $todo->tasks as $task )
-	<div class="ui modal {{ $errors->any() && $task->id == old('task_id') ? 'errors' : '' }}" id="edit_task_{{ $task->id }}">
+	<div class="ui modal {{ $errors->any() && $task->id == old('task_id') ? 'error' : '' }}" id="edit_task_{{ $task->id }}">
 		<i class="close icon"></i>
 		<div class="header">Editer une tâche</div>
 		<div class="content">
-			@if( $errors->any() && $task->id == old('task_id') )
+			<form class="ui form {{ $errors->any() && $task->id == old('task_id') ? 'error' : '' }}" id="edit_task_{{ $task->id }}_form" method="POST">
 				{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
-			@endif
-			<form class="ui form" id="edit_task_{{ $task->id }}_form" method="POST">
 				{{ csrf_field() }}
 				<input type="hidden" name="task_id" value="{{ $task->id }}"/>
 				<div class="field">

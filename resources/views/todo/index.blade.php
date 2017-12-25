@@ -49,14 +49,12 @@
 		{!! sendMessage('warning', 'Aucune liste disponible') !!}
 	@endif
 </div>
-<div class="ui modal {{ $errors->any() ? 'errors' : '' }}" id="add_todo_modal">
+<div class="ui modal {{ $errors->any() ? 'error' : '' }}" id="add_todo_modal">
 	<i class="close icon"></i>
 	<div class="header">Ajouter une liste</div>
 	<div class="content">
-		@if( $errors->any() )
+		<form class="ui form {{ $errors->any() ? 'error' : '' }}" id="add_todo_form" method="POST">
 			{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
-		@endif
-		<form class="ui form" id="add_todo_form" method="POST">
 			{{ csrf_field() }}
 			<div class="field">
 				<label for="name">Nom</label>
