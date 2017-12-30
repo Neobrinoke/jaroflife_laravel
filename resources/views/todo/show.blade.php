@@ -35,7 +35,7 @@
 							<button class="ui icon button teal" onclick="$('#edit_task_{{ $task->id }}_modal').modal({blurring: true}).modal('show');" data-tooltip="Editer la tâche"><i class="edit icon"></i></button>
 						</td>
 						<td class="collapsing">
-							<button class="ui icon button red" onclick="$('#delete_task_{{ $task->id }}_modal').modal({blurring: true}).modal('show');" data-tooltip="Supprimer la tâche"><i class="delete icon"></i></button>
+							<button class="ui icon button red" onclick="$('#delete_task_{{ $task->id }}_modal').modal({blurring: true}).modal('show');" data-tooltip="Supprimer la tâche"><i class="trash icon"></i></button>
 						</td>
 					</tr>
 				@endforeach
@@ -69,7 +69,7 @@
 				</div>
 			</div>
 			<div class="field">
-				<label>Text</label>
+				<label>Description</label>
 				<textarea name="description" id="description" cols="30" rows="5">{{ old('description') }}</textarea>
 			</div>
 		</form>
@@ -100,6 +100,7 @@
 			<form class="ui form {{ $errors->any() && $task->id == old('task_id') ? 'error' : '' }}" id="edit_task_{{ $task->id }}_form" method="POST"  action="{{ route('task.update', ['todo' => $todo, 'task' => $task]) }}">
 				{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
 				{{ csrf_field() }}
+				<input type="hidden" name="task_id" value="{{ $task->id }}">
 				<div class="field">
 					<div class="two fields">
 						<div class="field">
@@ -117,7 +118,7 @@
 					</div>
 				</div>
 				<div class="field">
-					<label>Text</label>
+					<label>Description</label>
 					<textarea name="description" id="description" cols="30" rows="5">{{ $task->description }}</textarea>
 				</div>
 			</form>
