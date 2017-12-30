@@ -34,6 +34,7 @@ class TaskController extends Controller
 		$validate_data['todo_id'] = $todo->id;
 
 		Task::create( $validate_data );
+		
 		return redirect()->route( 'todo.show', compact( 'todo' ) );
 	}
 
@@ -44,9 +45,8 @@ class TaskController extends Controller
 	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update( Request $request, Todo $todo )
+	public function update( Request $request, Todo $todo, Task $task )
 	{
-		$task = Task::findByTodo( $todo->id, $request->input( 'task_id' ) );
 		$this->authorize( 'edit_task', [$todo, $task] );
 
 		$validate_data = $request->validate([
@@ -57,6 +57,7 @@ class TaskController extends Controller
 
 		$task->fill( $validate_data );
 		$task->save();
+
 		return redirect()->route( 'todo.show', compact( 'todo' ) );
 	}
 
@@ -67,12 +68,12 @@ class TaskController extends Controller
 	 * @param  \App\Todo  $todo
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy( Request $request, Todo $todo )
+	public function destroy( Request $request, Todo $todo, Task $task )
 	{
-		$task = Task::findByTodo( $todo->id, $request->input( 'task_id' ) );
 		$this->authorize( 'edit_task', [$todo, $task] );
 
 		$task->delete();
+
 		return redirect()->route( 'todo.show', compact( 'todo' ) );
 	}
 }

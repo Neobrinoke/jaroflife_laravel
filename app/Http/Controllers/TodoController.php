@@ -88,26 +88,14 @@ class TodoController extends Controller
 	{
 		$this->authorize( 'edit_todo', $todo );
 
-		if( $request->has( 'edit_todo' ) )
-		{
-			$validate_data = $request->validate([
-				'name' => 'required|string|max:255|min:4',
-				'description' => 'required|string|max:255|min:10',
-			]);
+		$validate_data = $request->validate([
+			'name' => 'required|string|max:255|min:4',
+			'description' => 'required|string|max:255|min:10',
+		]);
 
-			$todo->fill( $validate_data );
-			$todo->save();
-		}
-		else if( $request->has( 'edit_member' ) || $request->has( 'expulse_member' ) )
-		{
-			$todo_user = TodosUser::findByTodoAndUser( $todo->id, $request->input( 'user_id' ) );
-			if( $request->has( 'edit_member' ) )
-			{
-				$todo_user->authority_id = $request->input( 'authority_id' );
-				$todo_user->save();
-			}
-			else $todo_user->delete();
-		}
+		$todo->fill( $validate_data );
+		$todo->save();
+		
 		return redirect()->route( 'todo.edit', compact( 'todo' ) );
 	}
 
@@ -128,7 +116,7 @@ class TodoController extends Controller
 	}
 
 	/**
-	 * Add some collab on the todo
+	 * Add some collabs on the todo.
 	 * 
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \App\Todo  $todo
@@ -145,6 +133,28 @@ class TodoController extends Controller
 				'authority_id' => 3
 			]);
 		}
+		return redirect()->route( 'todo.edit', compact( 'todo' ) );
+	}
+
+	/**
+	 * Update the collab info for this todo.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \App\Todo  $todo
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit_collab( Request $request, Todo $todo )
+	{
+		$this->authorize( 'edit_todo', $todo );
+
+		$todo_user = TodosUser::findByTodoAndUser( $todo->id, $request->input( 'user_id' ) );
+		if( $request->has( 'edit_member' ) )
+		{
+			$todo_user->authority_id = $request->input( 'authority_id' );
+			$todo_user->save();
+		}
+		else $todo_user->delete();
+
 		return redirect()->route( 'todo.edit', compact( 'todo' ) );
 	}
 }

@@ -53,7 +53,7 @@
 	<i class="close icon"></i>
 	<div class="header">Ajouter une liste</div>
 	<div class="content">
-		<form class="ui form {{ $errors->any() ? 'error' : '' }}" id="add_todo_form" method="POST">
+		<form class="ui form {{ $errors->any() ? 'error' : '' }}" id="add_todo_form" method="POST" action="{{ route('todo.store') }}">
 			{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
 			{{ csrf_field() }}
 			<div class="field">

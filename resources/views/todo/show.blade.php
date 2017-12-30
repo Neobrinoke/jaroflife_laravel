@@ -32,15 +32,10 @@
 						<td>{{ $task->user->name }}</td>
 						<td>{{ $task->created_at }}</td>
 						<td class="collapsing">
-							<button type="submit" class="ui icon button teal" onclick="$('#edit_task_{{ $task->id }}').modal({blurring: true}).modal('show');" data-tooltip="Editer la tâche"><i class="edit icon"></i></button>
+							<button class="ui icon button teal" onclick="$('#edit_task_{{ $task->id }}_modal').modal({blurring: true}).modal('show');" data-tooltip="Editer la tâche"><i class="edit icon"></i></button>
 						</td>
 						<td class="collapsing">
-							<form method="POST">
-								{{ csrf_field() }}
-								<input type="hidden" name="_method" value="DELETE"/>
-								<input type="hidden" name="task_id" value="{{ $task->id }}"/>
-								<button type="submit" class="ui icon button red" data-tooltip="Supprimer la tâche"><i class="trash icon"></i></button>
-							</form>
+							<button class="ui icon button red" onclick="$('#delete_task_{{ $task->id }}_modal').modal({blurring: true}).modal('show');" data-tooltip="Supprimer la tâche"><i class="delete icon"></i></button>
 						</td>
 					</tr>
 				@endforeach
@@ -54,10 +49,9 @@
 	<i class="close icon"></i>
 	<div class="header">Ajouter une tâche</div>
 	<div class="content">
-		<form class="ui form {{ $errors->any() && old('task_id') == null ? 'error' : '' }}" id="add_task_form" method="POST">
+		<form class="ui form {{ $errors->any() && old('task_id') == null ? 'error' : '' }}" id="add_task_form" method="POST" action="{{ route('task.store', [$todo]) }}">
 			{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
 			{{ csrf_field() }}
-			<input type="hidden" name="_method" value="PUT">
 			<div class="field">
 				<div class="two fields">
 					<div class="field">
@@ -85,14 +79,27 @@
 	</div>
 </div>
 @foreach( $todo->tasks as $task )
-	<div class="ui modal {{ $errors->any() && $task->id == old('task_id') ? 'error' : '' }}" id="edit_task_{{ $task->id }}">
+	<div class="ui modal" id="delete_task_{{ $task->id }}_modal">
+		<i class="close icon"></i>
+		<div class="header">Supprimer une tâche</div>
+		<div class="content">
+			<p>Voulez-vous vraiment supprimer cette tâche ? L'action est irreversible !</p>
+			<form class="ui form" id="delete_task_{{ $task->id }}_form" method="POST" action="{{ route('task.destroy', ['todo' => $todo, 'task' => $task]) }}">
+				{{ csrf_field() }}
+			</form>
+		</div>
+		<div class="actions">
+			<button class="ui negative left labeled icon button"><i class="close icon"></i>Non</button>
+			<button class="ui positive right labeled icon button" onclick="$('#delete_task_{{ $task->id }}_form').submit();">Oui<i class="checkmark icon"></i></button>
+		</div>
+	</div>
+	<div class="ui modal {{ $errors->any() && $task->id == old('task_id') ? 'error' : '' }}" id="edit_task_{{ $task->id }}_modal">
 		<i class="close icon"></i>
 		<div class="header">Editer une tâche</div>
 		<div class="content">
-			<form class="ui form {{ $errors->any() && $task->id == old('task_id') ? 'error' : '' }}" id="edit_task_{{ $task->id }}_form" method="POST">
+			<form class="ui form {{ $errors->any() && $task->id == old('task_id') ? 'error' : '' }}" id="edit_task_{{ $task->id }}_form" method="POST"  action="{{ route('task.update', ['todo' => $todo, 'task' => $task]) }}">
 				{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
 				{{ csrf_field() }}
-				<input type="hidden" name="task_id" value="{{ $task->id }}"/>
 				<div class="field">
 					<div class="two fields">
 						<div class="field">

@@ -13,7 +13,7 @@
 	<div class="ui grid">
 		<div class="six wide column">
 			<h4 class="ui dividing header">Détails</h4>
-			<form class="ui form {{ $errors->any() ? 'error' : '' }}" method="POST">
+			<form class="ui form {{ $errors->any() ? 'error' : '' }}" method="POST" action="{{ route('todo.update', [$todo]) }}">
 				{!! sendMessages('error', $errors->all(), ['header_message' => 'Erreurs']) !!}
 				{{ csrf_field() }}
 				<div class="field">
@@ -42,7 +42,7 @@
 					</thead>
 					<tbody>
 						@foreach( $todo->members as $member )
-							<form class="ui form" method="POST">
+							<form class="ui form" method="POST" action="{{ route('todo.edit_collab', [$todo]) }}">
 								{{ csrf_field() }}
 								<input type="hidden" name="user_id" value="{{ $member->user->id }}">
 								<tr>
@@ -75,10 +75,6 @@
 		</div>
 	</div>
 	<h4 class="ui dividing header">Zone de danger</h4>
-	<form class="ui form" id="delete_list" method="POST">
-		{{ csrf_field() }}
-		<input name="_method" type="hidden" value="DELETE" />
-	</form>
 	<button class="ui button red" onclick="$('#conf_remove_todo_modal').modal({blurring: true}).modal('show');">Supprimer cette liste !</button>
 </div>
 <div class="ui tiny modal" id="conf_remove_todo_modal">
@@ -87,6 +83,9 @@
 	<div class="content">
 		<p>Voulez-vous vraiment supprimer cette liste ? L'action est irreversible !</p>
 		<p>Toutes les tâches attribué à cette liste, ainsi que tous ses collaborateurs, seront supprimé.</p>
+		<form class="ui form" id="delete_list" method="POST" action="{{ route('todo.destroy', [$todo]) }}">
+			{{ csrf_field() }}
+		</form>
 	</div>
 	<div class="actions">
 		<button class="ui negative left labeled icon button"><i class="close icon"></i>Non</button>
@@ -98,9 +97,8 @@
 	<div class="header">Ajouter un collaborateur</div>
 	<div class="content">
 		<p>Pour ajouter un collaborateur vous pouvez parcourir la liste ci-dessous afin de trouver la personne que vous voulez !</p>
-		<form class="ui form" id="add_collab_form" method="POST">
+		<form class="ui form" id="add_collab_form" method="POST" action="{{ route('todo.add_collab', [$todo]) }}">
 			{{ csrf_field() }}
-			<input type="hidden" name="_method" value="PUT">
 			<div class="ui fluid multiple search selection dropdown">
 				<input type="hidden" name="users">
 				<i class="dropdown icon"></i>
