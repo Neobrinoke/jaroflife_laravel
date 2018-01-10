@@ -25,3 +25,8 @@
 td.ui.input {
 	display: table-cell;
 }
+
+main.ui.container {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}

@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 	</head>
 	<body>
-		<header class="ui attached stackable menu inverted" style="margin-bottom: 25px;">
+		<header class="ui attached stackable menu inverted">
 			<div class="ui container">
 				<a href="{{ route('todo.index') }}" class="ui item"><i class="list icon"></i>Afficher mes listes</a>
 				<div class="right menu">
@@ -32,6 +32,9 @@
 		<main class="ui container">
 			@yield('container')
 		</main>
+        <footer class="ui inverted vertical footer segment">
+            <div class="ui center aligned container">Code par Neobrinoke | Design Semantic-UI</div>
+        </footer>
 		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="{{ asset('js/tablesort.js') }}"></script>
