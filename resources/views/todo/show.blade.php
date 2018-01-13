@@ -6,7 +6,7 @@
 <div class="ui attached message">
 	<h1 class="header">
 		<span>{{ $title }}</span>
-		<span><a class="ui right floated basic icon button" onclick="$('#add_task_modal').modal({blurring: true}).modal('show');" data-tooltip="Ajouter une tâche"><i class="add icon"></i></a></span>
+		<span><a class="ui right floated basic icon button" onclick="$('#add_task_modal').modal('show');" data-tooltip="Ajouter une tâche"><i class="add icon"></i></a></span>
 	</h1>
 </div>
 <div class="ui attached fluid segment">
@@ -32,10 +32,10 @@
 						<td>{{ $task->user->name }}</td>
 						<td>{{ $task->created_at }}</td>
 						<td class="collapsing">
-							<button class="ui icon button teal" onclick="$('#edit_task_{{ $task->id }}_modal').modal({blurring: true}).modal('show');" data-tooltip="Editer la tâche"><i class="edit icon"></i></button>
+							<button class="ui icon button teal" onclick="$('#edit_task_{{ $task->id }}_modal').modal('show');" data-tooltip="Editer la tâche"><i class="edit icon"></i></button>
 						</td>
 						<td class="collapsing">
-							<button class="ui icon button red" onclick="$('#delete_task_{{ $task->id }}_modal').modal({blurring: true}).modal('show');" data-tooltip="Supprimer la tâche"><i class="trash icon"></i></button>
+							<button class="ui icon button red" onclick="$('#delete_task_{{ $task->id }}_modal').modal('show');" data-tooltip="Supprimer la tâche"><i class="trash icon"></i></button>
 						</td>
 					</tr>
 				@endforeach

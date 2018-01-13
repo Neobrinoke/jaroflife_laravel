@@ -29,4 +29,5 @@ td.ui.input {
 main.ui.container {
 	margin-top: 15px;
 	margin-bottom: 15px;
+	min-height: calc(100vh - 117px);
 }

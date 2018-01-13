@@ -33,7 +33,7 @@
 			@yield('container')
 		</main>
         <footer class="ui inverted vertical footer segment">
-            <div class="ui center aligned container">Code par Neobrinoke | Design Semantic-UI</div>
+            <div class="ui center aligned container">Framework PHP Laravel 5.5 | Framework CSS Semantic-UI</div>
         </footer>
 		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>

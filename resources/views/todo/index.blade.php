@@ -6,7 +6,7 @@
 <div class="ui attached message">
 	<h1 class="header">
 		<span>Mes listes</span>
-		<span><a class="ui right floated basic icon button" onclick="$('#add_todo_modal').modal({blurring: true}).modal('show');" data-tooltip="Ajouter une liste"><i class="add icon"></i></a></span>
+		<span><a class="ui right floated basic icon button" onclick="$('#add_todo_modal').modal('show');" data-tooltip="Ajouter une liste"><i class="add icon"></i></a></span>
 	</h1>
 </div>
 <div class="ui attached fluid segment">
