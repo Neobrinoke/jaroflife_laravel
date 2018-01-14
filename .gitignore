@@ -11,5 +11,3 @@ npm-debug.log
 yarn-error.log
 .env
 composer.lock
-/nbproject/private/
-/nbproject/

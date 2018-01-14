@@ -5,6 +5,7 @@
 @section('container')
 	<div class="ui attached message">
 		<h1 class="header">
+			<span><a class="ui left floated basic icon button" href="{{ url()->previous() }}" data-tooltip="Retour en arrière"><i class="arrow left icon"></i></a></span>
 			<span>{{ $title }}</span>
 			<span><a class="ui right floated basic icon button" onclick="$('#add_collab_modal').modal('show');" data-tooltip="Ajouter un utilisateur"><i class="user add icon"></i></a></span>
 		</h1>
@@ -62,8 +63,12 @@
 												</div>
 											</div>
 										</td>
-										<td class="collapsing"><input class="ui button teal" type="submit" name="edit_member" value="Editer" /></td>
-										<td class="collapsing"><input class="ui button red" type="submit" name="expulse_member" value="Expulser" /></td>
+										<td class="collapsing">
+											<input class="ui button teal" type="submit" name="edit_member" value="Editer" />
+										</td>
+										<td class="collapsing">
+											<input class="ui button red" type="submit" name="expulse_member" value="Expulser" />
+										</td>
 									</tr>
 								</form>
 							@endforeach
@@ -75,24 +80,24 @@
 			</div>
 		</div>
 		<h4 class="ui dividing header">Zone de danger</h4>
-		<button class="ui button red" onclick="$('#conf_remove_todo_modal').modal('show');">Supprimer cette liste !</button>
+		<button class="ui button red" onclick="$('#remove_todo_modal').modal('show');">Supprimer cette liste !</button>
 	</div>
-	<div class="ui tiny modal" id="conf_remove_todo_modal">
+	<div class="ui tiny modal" id="remove_todo_modal">
 		<i class="close icon"></i>
 		<div class="header">Supprimer une liste</div>
 		<div class="content">
 			<p>Voulez-vous vraiment supprimer cette liste ? L'action est irreversible !</p>
 			<p>Toutes les tâches attribué à cette liste, ainsi que tous ses collaborateurs, seront supprimé.</p>
-			<form class="ui form" id="delete_list" method="POST" action="{{ route('todo.destroy', [$todo]) }}">
+			<form class="ui form" id="remove_todo_form" method="POST" action="{{ route('todo.destroy', [$todo]) }}">
 				{{ csrf_field() }}
 			</form>
 		</div>
 		<div class="actions">
 			<button class="ui negative left labeled icon button"><i class="close icon"></i>Non</button>
-			<button class="ui positive right labeled icon button" onclick="$('#delete_list').submit();">Oui<i class="checkmark icon"></i></button>
+			<button class="ui positive right labeled icon button" onclick="$('#remove_todo_form').submit();">Oui<i class="checkmark icon"></i></button>
 		</div>
 	</div>
-	<div class="ui modal" id="add_collab_modal">
+	<div class="ui tiny modal" id="add_collab_modal">
 		<i class="close icon"></i>
 		<div class="header">Ajouter un collaborateur</div>
 		<div class="content">

@@ -6,10 +6,20 @@
 	position: absolute;
 	right: 7px;
 	top: 6px;
+	height: 36px;
+	width: 38px;
+}
+
+.ui.left.floated.basic.icon.button {
+	position: absolute;
+	left: 7px;
+	top: 6px;
+	height: 36px;
+	width: 38px;
 }
 
 .ui.message p {
-	margin-top: 0px;
+	margin-top: 0;
 }
 
 .ui.message div.header {
@@ -30,4 +40,8 @@ main.ui.container {
 	margin-top: 15px;
 	margin-bottom: 15px;
 	min-height: calc(100vh - 117px);
+}
+
+.ui.attached.message {
+	text-align: center;
 }
