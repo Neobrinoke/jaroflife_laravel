@@ -5,14 +5,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>@yield('title')</title>
-		<link rel="stylesheet" href="{{ asset('css/semantic.css') }}">
-		<link rel="stylesheet" href="{{ asset('css/guest.css') }}">
-		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/app.css') }}">
 	</head>
-	<body>
+	<body id="guest">
 		<div class="ui middle aligned center aligned grid">
 			<div class="column">
-				<h2 class="ui teal image header">
+				<h2 class="ui teal header">
 					<div class="content">@yield('title')</div>
 				</h2>
 				@yield('container')

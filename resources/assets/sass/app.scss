@@ -1,9 +1,5 @@
+@import "~semantic-ui-sass/semantic-ui";
 
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import "style";
 
-// Variables
-@import "variables";
-
-// Bootstrap
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "guest";

@@ -1,0 +1,18 @@
+body#guest {
+	background-color: #fff;
+
+	.grid {
+		height: 100%;
+	}
+	.column {
+		max-width: 450px;
+	}
+	.ui.error.message {
+		text-align: left;
+		margin-top: 0px;
+	}
+	.ui.success.message {
+		text-align: left;
+		margin-top: 0px;
+	}
+}
