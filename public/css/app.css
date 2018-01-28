@@ -37881,24 +37881,25 @@ main.ui.container {
   text-align: center;
 }
 
-body#guest {
+main#guest {
   background-color: #fff;
+  min-height: 100vh;
 }
 
-body#guest .grid {
+main#guest .grid {
   height: 100%;
 }
 
-body#guest .column {
+main#guest .column {
   max-width: 450px;
 }
 
-body#guest .ui.error.message {
+main#guest .ui.error.message {
   text-align: left;
   margin-top: 0px;
 }
 
-body#guest .ui.success.message {
+main#guest .ui.success.message {
   text-align: left;
   margin-top: 0px;
 }

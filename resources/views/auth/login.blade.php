@@ -1,4 +1,4 @@
-@extends('guest')
+@extends('layouts.guest')
 
 @section('title', 'Connexion')
 

@@ -1,16 +1,21 @@
-body#guest {
+main#guest {
+
 	background-color: #fff;
+	min-height: 100vh;
 
 	.grid {
 		height: 100%;
 	}
+
 	.column {
 		max-width: 450px;
 	}
+
 	.ui.error.message {
 		text-align: left;
 		margin-top: 0px;
 	}
+
 	.ui.success.message {
 		text-align: left;
 		margin-top: 0px;
