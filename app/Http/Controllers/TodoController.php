@@ -15,157 +15,170 @@ use Illuminate\Support\Facades\Auth;
  */
 class TodoController extends Controller
 {
-	/**
-	 * TodoController constructor.
-	 */
-	public function __construct()
-	{
-		$this->middleware( 'auth' );
-	}
+    /**
+     * TodoController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-	 */
-	public function index()
-	{
-		return view( 'todo.index', ['todos' => Auth::user()->todos] );
-	}
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        return view('todo.index', ['todos' => Auth::user()->todos]);
+    }
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param Request $request
-	 * @return \Illuminate\Http\RedirectResponse
-	 */
-	public function store( Request $request )
-	{
-		$validate_data = $request->validate( ['name' => 'required|string|max:255|min:4', 'description' => 'required|string|max:255|min:10'] );
-		$validate_data['author_id'] = Auth::id();
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $validate_data = $request->validate([
+            'name' => 'required|string|max:255|min:4',
+            'description' => 'required|string|max:255|min:10'
+        ]);
+        $validate_data['author_id'] = Auth::id();
 
-		$todo = Todo::create( $validate_data );
+        $todo = Todo::create($validate_data);
 
-		TodosUser::create( ['user_id' => Auth::id(), 'todo_id' => $todo->id, 'authority_id' => 1] );
+        TodosUser::create([
+            'user_id' => Auth::id(),
+            'todo_id' => $todo->id,
+            'authority_id' => 1
+        ]);
 
-		return redirect()->route( 'todo.index' );
-	}
+        return redirect()->route('todo.index');
+    }
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param Todo $todo
-	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-	 * @throws \Illuminate\Auth\Access\AuthorizationException
-	 */
-	public function show( Todo $todo )
-	{
-		$this->authorize( 'show_todo', $todo );
+    /**
+     * Display the specified resource.
+     *
+     * @param Todo $todo
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function show(Todo $todo)
+    {
+        $this->authorize('show_todo', $todo);
 
-		$title = "Mes tâches pour la liste [$todo->name]";
+        $title = "Mes tâches pour la liste [$todo->name]";
+        $tasks = $todo->tasks()->paginate(5);
+        if($tasks->isEmpty() && $tasks->previousPageUrl()) {
+            return redirect()->to($tasks->previousPageUrl());
+        }
 
-		return view( 'todo.show', compact( 'todo', 'title' ) );
-	}
+        return view('todo.show', compact('todo', 'title', 'tasks'));
+    }
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param Todo $todo
-	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-	 * @throws \Illuminate\Auth\Access\AuthorizationException
-	 */
-	public function edit( Todo $todo )
-	{
-		$this->authorize( 'edit_todo', $todo );
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Todo $todo
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit(Todo $todo)
+    {
+        $this->authorize('edit_todo', $todo);
 
-		$title = "Détails de la liste [$todo->name]";
-		$users = User::findAllWithoutMe();
+        $title = "Détails de la liste [$todo->name]";
+        $users = User::findAllWithoutMe();
 
-		return view( 'todo.edit', compact( 'todo', 'title', 'users' ) );
-	}
+        return view('todo.edit', compact('todo', 'title', 'users'));
+    }
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param Request $request
-	 * @param Todo    $todo
-	 * @return \Illuminate\Http\RedirectResponse
-	 * @throws \Illuminate\Auth\Access\AuthorizationException
-	 */
-	public function update( Request $request, Todo $todo )
-	{
-		$this->authorize( 'edit_todo', $todo );
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param Todo $todo
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function update(Request $request, Todo $todo)
+    {
+        $this->authorize('edit_todo', $todo);
 
-		$validate_data = $request->validate( ['name' => 'required|string|max:255|min:4', 'description' => 'required|string|max:255|min:10'] );
+        $validate_data = $request->validate([
+            'name' => 'required|string|max:255|min:4',
+            'description' => 'required|string|max:255|min:10'
+        ]);
 
-		$todo->fill( $validate_data );
-		$todo->save();
+        $todo->fill($validate_data);
+        $todo->save();
 
-		return redirect()->route( 'todo.edit', compact( 'todo' ) );
-	}
+        return redirect()->route('todo.edit', compact('todo'));
+    }
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param Todo $todo
-	 * @return \Illuminate\Http\RedirectResponse
-	 * @throws \Illuminate\Auth\Access\AuthorizationException
-	 */
-	public function destroy( Todo $todo )
-	{
-		$this->authorize( 'edit_todo', $todo );
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Todo $todo
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function destroy(Todo $todo)
+    {
+        $this->authorize('edit_todo', $todo);
 
-		TodosUser::where( 'todo_id', $todo->id )->delete();
-		Task::where( 'todo_id', $todo->id )->delete();
+        TodosUser::where('todo_id', $todo->id)->delete();
+        Task::where('todo_id', $todo->id)->delete();
 
-		return redirect()->route( 'todo.index' );
-	}
+        return redirect()->route('todo.index');
+    }
 
-	/**
-	 * Add some collabs on the todo.
-	 *
-	 * @param Request $request
-	 * @param Todo    $todo
-	 * @return \Illuminate\Http\RedirectResponse
-	 * @throws \Illuminate\Auth\Access\AuthorizationException
-	 */
-	public function addCollab( Request $request, Todo $todo )
-	{
-		$this->authorize( 'edit_todo', $todo );
+    /**
+     * Add some collabs on the todo.
+     *
+     * @param Request $request
+     * @param Todo $todo
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function addCollab(Request $request, Todo $todo)
+    {
+        $this->authorize('edit_todo', $todo);
 
-		$users_id = explode( ',', $request->input( 'users' ) );
-		foreach( $users_id as $user_id )
-		{
+        $users_id = explode(',', $request->input('users'));
+        foreach ($users_id as $user_id) {
 //			$todo_user = TodosUser::findByTodoAndUserUnsec( $todo->id, $user_id );
 //			if( $todo_user == null )
 //			{
-				TodosUser::create( ['user_id' => $user_id, 'todo_id' => $todo->id, 'authority_id' => 3] );
+            TodosUser::create(['user_id' => $user_id, 'todo_id' => $todo->id, 'authority_id' => 3]);
 //			}
-		}
+        }
 
-		return redirect()->route( 'todo.edit', compact( 'todo' ) );
-	}
+        return redirect()->route('todo.edit', compact('todo'));
+    }
 
-	/**
-	 * Update the collab info for this todo.
-	 *
-	 * @param Request $request
-	 * @param Todo    $todo
-	 * @return \Illuminate\Http\RedirectResponse
-	 * @throws \Illuminate\Auth\Access\AuthorizationException
-	 */
-	public function editCollab( Request $request, Todo $todo )
-	{
-		$this->authorize( 'edit_todo', $todo );
+    /**
+     * Update the collab info for this todo.
+     *
+     * @param Request $request
+     * @param Todo $todo
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function editCollab(Request $request, Todo $todo)
+    {
+        $this->authorize('edit_todo', $todo);
 
-		$todo_user = TodosUser::findByTodoAndUser( $todo->id, $request->input( 'user_id' ) );
-		if( $request->has( 'edit_member' ) )
-		{
-			$todo_user->authority_id = $request->input( 'authority_id' );
-			$todo_user->save();
-		}
-		else $todo_user->delete();
+        $todo_user = TodosUser::findByTodoAndUser($todo->id, $request->input('user_id'));
+        if ($request->has('edit_member')) {
+            $todo_user->authority_id = $request->input('authority_id');
+            $todo_user->save();
+        } else {
+            $todo_user->delete();
+        }
 
-		return redirect()->route( 'todo.edit', compact( 'todo' ) );
-	}
+        return redirect()->route('todo.edit', compact('todo'));
+    }
 }
