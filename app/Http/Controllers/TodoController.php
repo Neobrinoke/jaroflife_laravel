@@ -6,6 +6,7 @@ use App\Todo;
 use App\Task;
 use App\User;
 use App\TodosUser;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,7 +53,8 @@ class TodoController extends Controller
         TodosUser::create([
             'user_id' => Auth::id(),
             'todo_id' => $todo->id,
-            'authority_id' => 1
+            'authority_id' => 1,
+            'joined_at' => Carbon::now()
         ]);
 
         return redirect()->route('todo.index');
@@ -71,7 +73,7 @@ class TodoController extends Controller
 
         $title = "Mes tâches pour la liste [$todo->name]";
         $tasks = $todo->tasks()->paginate(5);
-        if($tasks->isEmpty() && $tasks->previousPageUrl()) {
+        if ($tasks->isEmpty() && $tasks->previousPageUrl()) {
             return redirect()->to($tasks->previousPageUrl());
         }
 
@@ -152,7 +154,12 @@ class TodoController extends Controller
 //			$todo_user = TodosUser::findByTodoAndUserUnsec( $todo->id, $user_id );
 //			if( $todo_user == null )
 //			{
-            TodosUser::create(['user_id' => $user_id, 'todo_id' => $todo->id, 'authority_id' => 3]);
+            TodosUser::create([
+                'user_id' => $user_id,
+                'todo_id' => $todo->id,
+                'authority_id' => 3,
+                'joined_at' => Carbon::now()
+            ]);
 //			}
         }
 

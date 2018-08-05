@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property User user_id
  * @property Todo todo_id
  * @property int authority_id
+ * @property Carbon joined_at
  * @package App
  */
 class TodosUser extends Model
@@ -31,7 +33,8 @@ class TodosUser extends Model
     protected $fillable = [
         'user_id',
         'todo_id',
-        'authority_id'
+        'authority_id',
+		'joined_at'
     ];
 
     /**
